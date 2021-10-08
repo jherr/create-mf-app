@@ -8,7 +8,7 @@ const glob = require("glob");
 
 const ncp = util.promisify(require("ncp").ncp);
 
-const templates = fs.readdirSync(path.join(__dirname, "../templates"));
+const templates = fs.readdirSync(path.join(__dirname, "../templates")).sort();
 
 const templateFile = (fileName, replacements) => {
   let contents = fs.readFileSync(fileName, "utf8").toString();
