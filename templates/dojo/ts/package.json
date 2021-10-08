@@ -15,8 +15,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-react-jsx": "^7.14.9",
     "@babel/plugin-transform-runtime": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.10.4",
     "autoprefixer": "^10.1.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.3.0",
@@ -24,12 +26,13 @@
     "postcss": "^8.2.1",
     "postcss-loader": "^4.1.0",
     "style-loader": "^3.3.0",
+    "umd-compat-loader": "^2.1.2",
     "webpack": "^5.57.1",
     "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.3.1"
   },
   "dependencies": {
     "@babel/runtime": "^7.13.10",
-    "mithril": "^2.0.4"
+    "@dojo/framework": "^8.0.0"
   }
 }
