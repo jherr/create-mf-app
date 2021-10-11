@@ -4,5 +4,10 @@ import "./index.{{CSS_EXTENSION}}";
 
 m.render(
   document.getElementById("app"),
-  m("div", { class: "" }, "Hi there from Mithril!")
+  m("div", { class: "{{CONTAINER}}" }, [
+    m("div", "Host: {{ NAME }}"),
+    m("div", "Framework: {{ FRAMEWORK }}"),
+    m("div", "Language: {{ LANGUAGE }}"),
+    m("div", "CSS: {{ CSS }}"),
+  ])
 );

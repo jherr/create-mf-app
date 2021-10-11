@@ -3,6 +3,12 @@ import ReactDOM from "react-dom";
 
 import "./index.{{CSS_EXTENSION}}";
 
-const App = () => <div>Hi there, I'm React from Webpack 5.</div>;
-
+const App = () => (
+  <div className="{{CONTAINER}}">
+    <div>Host: {{ NAME }}</div>
+    <div>Framework: {{ FRAMEWORK }}</div>
+    <div>Language: {{ LANGUAGE }}</div>
+    <div>CSS: {{ CSS }}</div>
+  </div>
+);
 ReactDOM.render(<App />, document.getElementById("app"));

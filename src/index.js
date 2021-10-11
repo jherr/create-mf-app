@@ -14,7 +14,7 @@ const templateFile = (fileName, replacements) => {
   let contents = fs.readFileSync(fileName, "utf8").toString();
   Object.keys(replacements).forEach((key) => {
     contents = contents.replace(
-      new RegExp(`\{\{${key}\}\}`, "g"),
+      new RegExp(`(\{\{${key}\}\}|\{\{ ${key} \}\})`, "g"),
       replacements[key]
     );
   });
@@ -72,9 +72,13 @@ inquirer
 
     const replacements = {
       NAME: answer.name,
+      FRAMEWORK: answer.framework,
       PORT: answer.port,
       SAFE_NAME: answer.name.replace(/-/g, "_").trim(),
       CSS_EXTENSION: tailwind ? "scss" : "css",
+      LANGUAGE: answer.language === "typescript" ? "TypeScript" : "JavaScript",
+      CSS: tailwind ? "Tailwind" : "Empty CSS",
+      CONTAINER: tailwind ? "mt-10 text-3xl mx-auto max-w-6xl" : "container",
     };
 
     if (tailwind) {
