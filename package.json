@@ -1,11 +1,11 @@
 {
   "name": "create-mf-app",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Create Module Federation apps",
   "main": "src/index.js",
-  "bin": "src/index.js",
+  "bin": "bin/create-mf-app.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node bin/create-mf-app.js"
   },
   "author": "Jack Herrington",
   "license": "MIT",
