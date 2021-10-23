@@ -23,11 +23,17 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        loader: "ts-loader",
-        options: {
-          appendTsSuffixTo: [/\.vue$/],
-        },
-        exclude: /node_modules/,
+        use: [
+          "babel-loader",
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+              appendTsSuffixTo: ["\\.vue$"],
+              happyPackMode: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(css|s[ac]ss)$/i,
