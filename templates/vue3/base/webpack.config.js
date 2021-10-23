@@ -2,7 +2,6 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const { VueLoaderPlugin } = require("vue-loader");
 
-const deps = require("./package.json").dependencies;
 module.exports = {
   output: {
     publicPath: "http://localhost:{{PORT}}/",
@@ -23,11 +22,12 @@ module.exports = {
         loader: "vue-loader",
       },
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         loader: "ts-loader",
         options: {
           appendTsSuffixTo: [/\.vue$/],
         },
+        exclude: /node_modules/,
       },
       {
         test: /\.(css|s[ac]ss)$/i,
@@ -43,14 +43,7 @@ module.exports = {
       filename: "remoteEntry.js",
       remotes: {},
       exposes: {},
-      shared: {
-        ...deps,
-        vue: {
-          singleton: true,
-          eager: true,
-          version: deps.vue,
-        },
-      },
+      shared: require("./package.json").dependencies,
     }),
     new HtmlWebPackPlugin({
       template: "./src/index.html",
