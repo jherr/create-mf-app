@@ -97,8 +97,7 @@ const builder = require("../src/index");
     });
   }
 
-  shell.cd(answers.name);
-  shell.echo(`Your app '${answers.name}' is ready to go.
+  shell.echo(`Your '${answers.name}' project is ready to go.
 
 Next steps:
 
