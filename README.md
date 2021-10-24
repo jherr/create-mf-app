@@ -12,6 +12,7 @@ npx create-mf-app
 const builder = require("create-mf-app");
 
 builder({
+  type: "Application",
   name: "my-project",
   port: "8080",
   framework: "react",

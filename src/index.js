@@ -17,43 +17,73 @@ const templateFile = (fileName, replacements) => {
 };
 
 // Options:
+//   - type: "Application", "Library", "Server"
 //   - name: Name of the project
 //   - framework: Name of the framework
 //   - language: Language of the project
 //   - css: CSS framework
 //   - port: Port to run the project on
 
-module.exports = async ({ language, framework, name, css, port }) => {
+module.exports = async ({ type, language, framework, name, css, port }) => {
   const lang = language === "typescript" ? "ts" : "js";
-  const tailwind = css === "Tailwind";
-
-  await ncp(path.join(__dirname, `../templates/${framework}/base`), name);
-  await ncp(path.join(__dirname, `../templates/${framework}/${lang}`), name);
 
   const replacements = {
     NAME: name,
     FRAMEWORK: framework,
-    PORT: port,
     SAFE_NAME: name.replace(/-/g, "_").trim(),
-    CSS_EXTENSION: tailwind ? "scss" : "css",
     LANGUAGE: language === "typescript" ? "TypeScript" : "JavaScript",
-    CSS: tailwind ? "Tailwind" : "Empty CSS",
-    CONTAINER: tailwind ? "mt-10 text-3xl mx-auto max-w-6xl" : "container",
   };
 
-  if (tailwind) {
-    fs.rmSync(path.join(name, "/src/index.css"));
+  const tempDir = type.toLowerCase();
 
-    await ncp(path.join(__dirname, "../extras/tailwind"), name);
+  if (type === "Library") {
+    await ncp(path.join(__dirname, `../templates/${tempDir}/typescript`), name);
+  }
 
-    const packageJSON = JSON.parse(
-      fs.readFileSync(path.join(name, "package.json"), "utf8")
+  if (type === "Server") {
+    replacements.PORT = port;
+
+    await ncp(
+      path.join(__dirname, `../templates/${tempDir}/${framework}`),
+      name
     );
-    packageJSON.devDependencies.tailwindcss = "^2.0.2";
-    fs.writeFileSync(
-      path.join(name, "package.json"),
-      JSON.stringify(packageJSON, null, 2)
+  }
+
+  if (type === "Application") {
+    await ncp(
+      path.join(__dirname, `../templates/${tempDir}/${framework}/base`),
+      name
     );
+    await ncp(
+      path.join(__dirname, `../templates/${tempDir}/${framework}/${lang}`),
+      name
+    );
+
+    const tailwind = css === "Tailwind";
+    replacements.CSS_EXTENSION = tailwind ? "scss" : "css";
+    replacements.CONTAINER = tailwind
+      ? "mt-10 text-3xl mx-auto max-w-6xl"
+      : "container";
+    replacements.CSS = tailwind ? "Tailwind" : "Empty CSS";
+    replacements.PORT = port;
+
+    if (tailwind) {
+      fs.rmSync(path.join(name, "/src/index.css"));
+
+      await ncp(
+        path.join(__dirname, "../templates/application-extras/tailwind"),
+        name
+      );
+
+      const packageJSON = JSON.parse(
+        fs.readFileSync(path.join(name, "package.json"), "utf8")
+      );
+      packageJSON.devDependencies.tailwindcss = "^2.0.2";
+      fs.writeFileSync(
+        path.join(name, "package.json"),
+        JSON.stringify(packageJSON, null, 2)
+      );
+    }
   }
 
   glob.sync(`${name}/**/*`).forEach((file) => {
