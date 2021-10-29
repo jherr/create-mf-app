@@ -1,0 +1,1 @@
+Put your static files in this directory and then delete this file.

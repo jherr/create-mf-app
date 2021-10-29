@@ -8,7 +8,8 @@ module.exports = {
   },
 
   devServer: {
-    port: {{PORT}}
+    port: {{PORT}},
+    historyApiFallback: true,
   },
 
   module: {
