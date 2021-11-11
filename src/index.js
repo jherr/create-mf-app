@@ -68,7 +68,7 @@ module.exports = async ({ type, language, framework, name, css, port }) => {
     replacements.PORT = port;
 
     if (tailwind) {
-      fs.rmSync(path.join(name, "/src/index.css"));
+      fs.unlinkSync(path.join(name, "/src/index.css"));
 
       await ncp(
         path.join(__dirname, "../templates/application-extras/tailwind"),
