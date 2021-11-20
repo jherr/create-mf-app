@@ -16,6 +16,12 @@ const templateFile = (fileName, replacements) => {
   fs.writeFileSync(fileName, contents);
 };
 
+// required for npm publish
+const renameGitignore = (projectName) => {
+  const projectPath = path.join(__dirname, projectName);
+  fs.renameSync(`${projectPath}/gitignore`, `${projectPath}/.gitignore`)
+}
+
 // Options:
 //   - type: "Application", "Library", "Server"
 //   - name: Name of the project
@@ -85,6 +91,8 @@ module.exports = async ({ type, language, framework, name, css, port }) => {
       );
     }
   }
+
+  renameGitignore(name);
 
   glob.sync(`${name}/**/*`).forEach((file) => {
     if (fs.lstatSync(file).isFile()) {
