@@ -11,7 +11,7 @@ npx create-mf-app
 
 These projects are not production complete. They are designed as lightweight projects that can be used to quickly prototype a new feature or library.
 
-# Programmatic Usage
+## Programmatic Usage
 
 ```js
 const builder = require("create-mf-app");
