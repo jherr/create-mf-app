@@ -1,7 +1,10 @@
 # create-mf-app
+[![npm version](https://badge.fury.io/js/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app) [![npm version](https://img.shields.io/npm/dm/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app)
 
 Creates a Module Federation applcation, API server, or library based on one of multiple different templates.
 
+
+## Usage
 ```
 npx create-mf-app
 ```
