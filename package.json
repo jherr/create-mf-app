@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "bin": "bin/create-mf-app.js",
   "scripts": {
-    "start": "node bin/create-mf-app.js"
+    "start": "node bin/create-mf-app.js",
+    "lint": "eslint . --ext .js --fix"
   },
   "author": "Jack Herrington",
   "license": "MIT",
