@@ -1,6 +1,6 @@
 {
   "name": "create-mf-app",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Create Module Federation apps",
   "main": "src/index.js",
   "bin": "bin/create-mf-app.js",
