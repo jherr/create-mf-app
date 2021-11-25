@@ -9,7 +9,7 @@ const templateFile = (fileName, replacements) => {
   let contents = fs.readFileSync(fileName, 'utf8').toString()
   Object.keys(replacements).forEach((key) => {
     contents = contents.replace(
-      new RegExp(`(\{\{${key}\}\}|\{\{ ${key} \}\})`, 'g'),
+      new RegExp(`(\{\{${key}\}\}|\{\{ ${key} \}\})`, 'g'), //eslint-disable-line
       replacements[key]
     )
   })
