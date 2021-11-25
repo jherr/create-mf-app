@@ -6,7 +6,8 @@
   "bin": "bin/create-mf-app.js",
   "scripts": {
     "start": "node bin/create-mf-app.js",
-    "lint": "eslint . --ext .js --fix"
+    "lint": "eslint . --ext .js --fix",
+    "prepare": "husky install"
   },
   "author": "Jack Herrington",
   "license": "MIT",
@@ -21,6 +22,7 @@
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.1"
+    "eslint-plugin-promise": "^5.1.1",
+    "husky": "^7.0.4"
   }
 }
