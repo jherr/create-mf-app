@@ -1,3 +1,5 @@
+<img src="./assets/create-mf-app.svg">
+
 # create-mf-app
 [![npm version](https://badge.fury.io/js/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app) [![npm version](https://img.shields.io/npm/dm/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app)
 
