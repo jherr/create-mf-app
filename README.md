@@ -1,4 +1,8 @@
-<img src="./assets/create-mf-app.svg">
+<p align="center">
+  <a href="https://github.com/jherr/create-mf-app">
+    <img src="./assets/create-mf-app.svg" width="50%">
+  </a>
+</p>
 
 # create-mf-app
 [![npm version](https://badge.fury.io/js/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app) [![npm version](https://img.shields.io/npm/dm/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app)
