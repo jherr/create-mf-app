@@ -6,14 +6,14 @@
 <h1 align="center">
 create-mf-app
 </h1>
-<h2 align="center">
+<p align="center">
   <a href="https://badge.fury.io/js/create-mf-app">
     <img src="https://badge.fury.io/js/create-mf-app.svg" alt="npm version"></img>
   </a>
   <a href="https://badge.fury.io/js/create-mf-app">
     <img src="https://img.shields.io/npm/dm/create-mf-app.svg" alt="npm downloads"></img>
   </a>
-</h2>
+</p>
 <p align="center">
 <b>create-mf-app</b> is a tool to create a <b>Module Federation application</b>, <b>API server</b>, or <b>library</b> based on one of multiple different templates.
 </p>
