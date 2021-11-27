@@ -3,11 +3,25 @@
     <img src="./assets/create-mf-app.svg" width="50%">
   </a>
 </p>
+<h1 align="center">
+create-mf-app
+</h1>
+<h2 align="center">
+  <a href="https://badge.fury.io/js/create-mf-app">
+    <img src="https://badge.fury.io/js/create-mf-app.svg" alt="npm version"></img>
+  </a>
+  <a href="https://badge.fury.io/js/create-mf-app">
+    <img src="https://img.shields.io/npm/dm/create-mf-app.svg" alt="npm downloads"></img>
+  </a>
+</h2>
+<p align="center">
+<b>create-mf-app</b> is a tool to create a <b>Module Federation application</b>, <b>API server</b>, or <b>library</b> based on one of multiple different templates.
+</p>
 
-# create-mf-app
+<!-- # create-mf-app
 [![npm version](https://badge.fury.io/js/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app) [![npm version](https://img.shields.io/npm/dm/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app)
 
-Creates a Module Federation application, API server, or library based on one of multiple different templates.
+Creates a Module Federation application, API server, or library based on one of multiple different templates. -->
 
 
 ## Usage
