@@ -1,0 +1,21 @@
+# https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
+
+#node
+yarn.lock
+
+#misc
+.husky
+assets
+
+#tests
+test
+coverage
+
+#linters
+.eslintrc*
+.eslintignore
+
+#editor settings
+.vscode
+.idea
+.editorconfig
