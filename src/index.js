@@ -18,11 +18,10 @@ const templateFile = (fileName, replacements) => {
 
 // required for npm publish
 const renameGitignore = (projectName) => {
-  const projectPath = path.join(__dirname, `../${projectName}`)
-  if (fs.existsSync(path.normalize(`${projectPath}/gitignore`))) {
+  if (fs.existsSync(path.normalize(`${projectName}/gitignore`))) {
     fs.renameSync(
-      path.normalize(`${projectPath}/gitignore`),
-      path.normalize(`${projectPath}/.gitignore`)
+      path.normalize(`${projectName}/gitignore`),
+      path.normalize(`${projectName}/.gitignore`)
     )
   }
 }
