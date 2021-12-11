@@ -1,30 +1,29 @@
 #!/usr/bin/env node
-const inquirer = require('inquirer')
-const shell = require('shelljs')
-const fs = require('fs')
-const path = require('path')
-
-const builder = require('../src/index');
-
-(async function () {
-  const answers = await inquirer.prompt([
+import inquirer from 'inquirer'
+import shell from 'shelljs'
+import fs from 'fs'
+import path from 'path'
+import { buildProject } from '../src/index'
+import { Project } from '../src/types'
+;(async function () {
+  const answers = await inquirer.prompt<Project>([
     {
       type: 'input',
       message: 'Pick the name of your app:',
       name: 'name',
-      default: 'host'
+      default: 'host',
     },
     {
       type: 'list',
       message: 'Project Type:',
       name: 'type',
       choices: ['Application', 'API Server', 'Library'],
-      default: 'Application'
-    }
+      default: 'Application',
+    },
   ])
 
   if (answers.type === 'Library') {
-    builder(answers)
+    buildProject(answers)
   }
 
   if (answers.type === 'API Server') {
@@ -32,27 +31,26 @@ const builder = require('../src/index');
       .readdirSync(path.join(__dirname, '../templates/server'))
       .sort()
 
-    const serverAnswers = await inquirer.prompt([
+    const serverAnswers = await inquirer.prompt<Project>([
       {
         type: 'input',
         message: 'Port number:',
         name: 'port',
-        default: '8080'
+        default: '8080',
       },
       {
         type: 'list',
         message: 'Template:',
         name: 'framework',
         choices: templates,
-        default: 'express'
-      }
+        default: 'express',
+      },
     ])
 
-    builder({
+    buildProject({
       ...answers,
       ...serverAnswers,
-      type: 'Server',
-      language: 'typescript'
+      language: 'typescript',
     })
   }
 
@@ -61,39 +59,39 @@ const builder = require('../src/index');
       .readdirSync(path.join(__dirname, '../templates/application'))
       .sort()
 
-    const appAnswers = await inquirer.prompt([
+    const appAnswers = await inquirer.prompt<Project>([
       {
         type: 'input',
         message: 'Port number:',
         name: 'port',
-        default: '8080'
+        default: '8080',
       },
       {
         type: 'list',
         message: 'Framework:',
         name: 'framework',
         choices: templates,
-        default: 'react'
+        default: 'react',
       },
       {
         type: 'list',
         message: 'Language:',
         name: 'language',
         choices: ['typescript', 'javascript'],
-        default: 'javascript'
+        default: 'javascript',
       },
       {
         type: 'list',
         message: 'CSS:',
         name: 'css',
         choices: ['CSS', 'Tailwind'],
-        default: 'CSS'
-      }
+        default: 'CSS',
+      },
     ])
 
-    builder({
+    buildProject({
       ...answers,
-      ...appAnswers
+      ...appAnswers,
     })
   }
 
