@@ -67,7 +67,7 @@ const buildProfiler = ({
 //   - port: Port to run the project on
 
 export const buildProject = async (project: Project) => {
-  const { language, name, framework, type, port } = project
+  const { language, name, framework, type } = project
   const lang = language === 'typescript' ? 'ts' : 'js'
   const tempDir = type.toLowerCase()
   const profiler = buildProfiler(project)

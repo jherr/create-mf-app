@@ -1,1 +1,4 @@
 node_modules/
+bin/create-mf-app.js
+src/index.js
+src/types.js
