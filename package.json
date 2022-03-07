@@ -1,7 +1,7 @@
 {
-  "name": "create-mf-app",
-  "version": "1.0.15",
-  "description": "Create Module Federation apps",
+  "name": "ashlar",
+  "version": "0.0.0",
+  "description": "create module-federated micro-frontends, fork of jack herrington 'create-mf-app' v1.0.15.",
   "main": "src/index.js",
   "bin": "bin/create-mf-app.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .js --fix",
     "prepare": "husky install"
   },
-  "author": "Jack Herrington",
+  "author": "krobinson",
   "license": "MIT",
   "dependencies": {
     "glob": "^7.2.0",
