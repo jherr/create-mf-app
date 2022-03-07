@@ -1,6 +1,6 @@
 {
   "name": "@freemasonjs/ashlar",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "create module-federated micro-frontends, fork of jack herrington 'create-mf-app' v1.0.15.",
   "main": "src/index.js",
   "bin": "bin/create-mf-app.js",
