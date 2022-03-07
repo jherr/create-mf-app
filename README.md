@@ -1,3 +1,5 @@
+# To use as method to bootstrap individual "Ashlars", individual microfrontends.
+
 # create-mf-app
 
 [![npm version](https://badge.fury.io/js/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app) [![npm version](https://img.shields.io/npm/dm/create-mf-app.svg)](https://badge.fury.io/js/create-mf-app)
