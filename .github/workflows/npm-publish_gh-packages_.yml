@@ -24,21 +24,33 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [15, 16]
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v2
+      - name: Use Node.js ${{matrix.node-version}}
       - uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: ${{ matrix.node-version}}
           registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+      
+      - name: Use pnpm package manager
       - uses: pnpm/action-setup@v2.1.0
         with:
           version: 6.32.2
 
+      - name: Install dependencies
       - run: pnpm i
+
+      - name: Run Husky prepare scritps
       - run: pnpm prepare
+
+      - name: Publish to NPM
       - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
