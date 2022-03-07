@@ -73,7 +73,7 @@ jobs:
         uses: pnpm/action-setup@v2.1.0
         with:
           version: 6.32.2
-      - name: Configure Nodejs v${{secrets.NPM_TOKEN}}
+      - name: Configure Nodejs v${{secrets.GITHUB_TOKEN}}
         uses: actions/setup-node@v2
         with:
           node-version: 16
@@ -82,7 +82,7 @@ jobs:
 
       - name: PNPM install
         run: pnpm i
-      - name: Publish to GHP
+      - name: Publish to GPR
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
