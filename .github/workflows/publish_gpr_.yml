@@ -52,7 +52,8 @@ jobs:
         with:
           node-version: ${{matrix.node-version}}
           registry-url: https://npm.pkg.github.com/
-          cache: 'pnpm'
+          #cache: 'pnpm'
+          scope: '@kthrob'
       - name: PNPM install
         run: pnpm i
       - name: Publish to NPM
