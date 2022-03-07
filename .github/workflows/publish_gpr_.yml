@@ -1,6 +1,6 @@
-# This workflow will run tests using node and then publish a package to NPM & GitHub Packages when a release is created
+# This workflow will  
 
-name: Node.js Package
+name: 
 
 on:
   release:
@@ -31,7 +31,7 @@ jobs:
       - name: PNPM build
         run: pnpm build
 
-  publish-npm:
+  publish-gpr:
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -51,38 +51,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{matrix.node-version}}
-          registry-url: https://registry.npmjs.org/
+          registry-url: https://npm.pkg.github.com/
           cache: 'pnpm'
       - name: PNPM install
         run: pnpm i
       - name: Publish to NPM
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Configure PNPM
-        uses: pnpm/action-setup@v2.1.0
-        with:
-          version: 6.32.2
-      - name: Configure Nodejs v${{secrets.GITHUB_TOKEN}}
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/
-          cache: 'pnpm'
-
-      - name: PNPM install
-        run: pnpm i
-      - name: Publish to GPR
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

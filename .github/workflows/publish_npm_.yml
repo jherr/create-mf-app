@@ -1,0 +1,61 @@
+# This workflow will
+
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure Nodejs v${{matrix.node-version}}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Configure PNPM
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6.32.2
+      - name: PNPM install
+        run: pnpm i
+      - name: PNPM build
+        run: pnpm build
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure PNPM
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6.32.2
+      - name: Configure Nodejs v${{matrix.node-version}}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+      - name: PNPM install
+        run: pnpm i
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
