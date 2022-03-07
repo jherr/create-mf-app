@@ -1,6 +1,6 @@
 # This workflow will  
 
-name: 
+name: Publish package to gpr registry
 
 on:
   release:
