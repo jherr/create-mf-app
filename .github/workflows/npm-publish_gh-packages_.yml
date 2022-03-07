@@ -38,6 +38,7 @@ jobs:
           version: 6.32.2
 
       - run: pnpm i
+      - run: pnpm prepare
       - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -59,6 +60,7 @@ jobs:
           version: 6.32.2
 
       - run: pnpm i
+      - run: pnpm prepare
       - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
