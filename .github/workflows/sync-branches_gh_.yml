@@ -16,7 +16,16 @@ jobs:
           from_branch: development
           target_branch: staging
           github_token: ${{secrets.GITHUB_TOKEN}}
-
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          minor-wording:  'add,Adds,new'
+          major-wording:  'MAJOR,cut-major'
+          patch-wording:  'patch,fixes'     # Providing patch-wording will override commits
+                                            # defaulting to a patch bump.
+          rc-wording:     'RELEASE,alpha'
       - name: Merge staging -> release
         uses: devmasx/merge-branch@master
         with:
