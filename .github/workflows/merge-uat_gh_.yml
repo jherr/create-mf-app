@@ -1,9 +1,9 @@
-name: Merge any release branch to uat
+name: Merge release into main
 on:
   push:
     branches:
       #- 'release/*'
-      - release
+      - 'release'
 jobs:
   merge-branch:
     runs-on: ubuntu-latest
