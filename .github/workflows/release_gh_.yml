@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - staging
-    branches-ignore:
-
-    tags:
-      - v*.*.*
-      - 'v*'
     tags-ignore:
       - *-alpha
 jobs:
