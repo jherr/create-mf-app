@@ -1,4 +1,4 @@
-name: Sync multiple branches
+name: Sync development -> staging && staging -> release
 on:
   push:
     branches:
