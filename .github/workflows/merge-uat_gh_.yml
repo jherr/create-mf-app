@@ -1,0 +1,17 @@
+name: Merge any release branch to uat
+on:
+  push:
+    branches:
+      - 'release/*'
+jobs:
+  merge-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Merge staging -> uat
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          target_branch: uat
+          github_token: ${{ github.token }}
