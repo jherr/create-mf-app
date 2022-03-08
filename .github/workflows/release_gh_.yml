@@ -2,9 +2,15 @@ name: Create Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - staging
+    branches-ignore:
 
+    tags:
+      - v*.*.*
+      - 'v*'
+    tags-ignore:
+      - *-alpha
 jobs:
   build:
     runs-on: ubuntu-latest
