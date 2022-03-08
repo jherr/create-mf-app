@@ -10,6 +10,11 @@
     "lint": "eslint . --ext .js --fix",
     "prepare": "husky install"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "git pull"
+    }
+  },
   "author": "krobinson",
   "license": "MIT",
   "dependencies": {
@@ -28,7 +33,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.1",
     "husky": "^7.0.4",
-    "mrm": "^3.0.10",
     "prettier": "^2.5.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.3"
