@@ -14,15 +14,13 @@ jobs:
         with:
           type: now
           from_branch: development
-          #target_branch: release ?
           target_branch: staging
           github_token: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Merge staging -> uat
+      - name: Merge staging -> release
         uses: devmasx/merge-branch@master
         with:
           type: now
-          #from_branch: release ?
           from_branch: staging
-          target_branch: uat
+          target_branch: release
           github_token: ${{secrets.GITHUB_TOKEN}}
