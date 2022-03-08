@@ -1,28 +1,35 @@
-name: Sync multiple branches
+name: Sync development -> staging && staging -> release
 on:
   push:
     branches:
       - '*'
 jobs:
-  sync-branch:
+  sync-branches:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Merge development -> staging
         uses: devmasx/merge-branch@1.4.0
         with:
           type: now
           from_branch: development
-          #target_branch: release ?
           target_branch: staging
           github_token: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Merge staging -> uat
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          minor-wording:  'add,Adds,new'
+          major-wording:  'MAJOR,cut-major'
+          patch-wording:  'patch,fixes'     # Providing patch-wording will override commits
+                                            # defaulting to a patch bump.
+          rc-wording:     'RELEASE,alpha'
+      - name: Merge staging -> release
         uses: devmasx/merge-branch@master
         with:
           type: now
-          #from_branch: release ?
           from_branch: staging
-          target_branch: uat
+          target_branch: release
           github_token: ${{secrets.GITHUB_TOKEN}}
