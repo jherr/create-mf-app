@@ -1,8 +1,9 @@
 import util from 'util'
 import fs from 'fs'
+import YAML from 'yaml'
 import path from 'path'
 import glob from 'glob'
-import { Profiler, Project } from './types'
+import { Config, Profiler, Project } from './types'
 
 const ncp = util.promisify(require('ncp').ncp)
 
@@ -58,20 +59,13 @@ const buildProfiler = ({
   return profiler
 }
 
-// Options:
-//   - type: "Application", "Library", "Server"
-//   - name: Name of the project
-//   - framework: Name of the framework
-//   - language: Language of the project
-//   - css: CSS framework
-//   - port: Port to run the project on
-
 export const buildProject = async (project: Project) => {
+  console.log(`Building ${project.name}`)
+
   const { language, name, framework, type } = project
   const lang = language === 'typescript' ? 'ts' : 'js'
   const tempDir = type.toLowerCase()
   const profiler = buildProfiler(project)
-
   switch (type) {
     case 'Library':
       await ncp(
@@ -100,17 +94,17 @@ export const buildProject = async (project: Project) => {
         if (profiler.CSS_EXTENSION === 'scss') {
           fs.unlinkSync(path.normalize(`${name}/src/index.css`))
           await ncp(
-              path.join(__dirname, '../templates/application-extras/tailwind'),
-              name
+            path.join(__dirname, '../templates/application-extras/tailwind'),
+            name
           )
 
           const packageJSON = JSON.parse(
-              fs.readFileSync(path.join(name, 'package.json'), 'utf8')
+            fs.readFileSync(path.join(name, 'package.json'), 'utf8')
           )
           packageJSON.devDependencies.tailwindcss = '^2.0.2'
           fs.writeFileSync(
-              path.join(name, 'package.json'),
-              JSON.stringify(packageJSON, null, 2)
+            path.join(name, 'package.json'),
+            JSON.stringify(packageJSON, null, 2)
           )
         }
       }
@@ -123,4 +117,55 @@ export const buildProject = async (project: Project) => {
       templateFile(file, profiler)
     }
   })
+}
+
+export const buildProjectWithConfig = async (configPath: string) => {
+  const configFile = configPath
+  const file = fs.readFileSync(configFile, 'utf8')
+  const configs: Config = YAML.parse(file)
+
+  const { apps, servers } = configs
+
+  if (apps) {
+    apps.map((app: any) => {
+      const [name] = Object.keys(app)
+      app[name].type = 'Application'
+      app[name].name = name
+      ;(async function () {
+        const templates = fs
+          .readdirSync(path.join(__dirname, '../templates/application'))
+          .sort()
+
+        const foundType = templates.find(
+          (template) => template == app[name].framework
+        )
+
+        if (foundType) {
+          buildProject(app[name])
+        }
+      })()
+    })
+  }
+
+  if (servers) {
+    servers.map((server: any) => {
+      const [name] = Object.keys(server)
+      server[name].type = 'API Server'
+      server[name].name = name
+      server[name].language = 'typescript'
+      ;(async function () {
+        const templates = fs
+          .readdirSync(path.join(__dirname, '../templates/server'))
+          .sort()
+
+        const foundType = templates.find(
+          (template) => template == server[name].framework
+        )
+
+        if (foundType) {
+          buildProject(server[name])
+        }
+      })()
+    })
+  }
 }

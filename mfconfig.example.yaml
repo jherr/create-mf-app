@@ -1,0 +1,32 @@
+apps:
+  - cart:
+      framework: react
+      language: typescript
+      port: 3000
+      css: tailwind
+      consumes:
+        - pdp
+        - cart
+        - home
+  - pdp:
+      framework: react
+      language: typescript
+      port: 3001
+      css: tailwind
+      consumes:
+        - pdp
+        - cart
+        - home
+  - home:
+      framework: react
+      language: typescript
+      port: 3002
+      css: tailwind
+      consumes:
+        - pdp
+        - cart
+        - home
+servers:
+  - server:
+      framework: express
+      port: 8080
