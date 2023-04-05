@@ -7,7 +7,7 @@ const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
 
 const deps = require("./package.json").dependencies;
-module.exports = {
+module.exports = (_, argv) => ({
   output: {
     publicPath: "http://localhost:{{PORT}}/",
   },
@@ -93,4 +93,4 @@ module.exports = {
     }),
   ],
   devtool: prod ? false : "source-map",
-};
+});
