@@ -16,4 +16,10 @@ export type Project = {
   port?: number
   name: string
   type: 'Application' | 'Library' | 'API Server'
+  consumes?: string[]
+}
+
+export type Config = {
+  apps?: Project[]
+  servers?: Project[]
 }
