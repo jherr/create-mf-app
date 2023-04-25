@@ -82,7 +82,7 @@ export const buildProject = async (project: Project) => {
 
     case 'API Server':
       await ncp(
-        path.join(__dirname, `../templates/${tempDir}/${framework}`),
+        path.join(__dirname, `../templates/server/${framework}`),
         name
       )
       break
