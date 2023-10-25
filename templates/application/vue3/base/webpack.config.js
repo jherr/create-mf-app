@@ -1,7 +1,7 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const { VueLoaderPlugin } = require("vue-loader");
-
+const Dotenv = require('dotenv-webpack');
 module.exports = (_, argv) => ({
   output: {
     publicPath: "http://localhost:{{PORT}}/",
@@ -55,5 +55,6 @@ module.exports = (_, argv) => ({
     new HtmlWebPackPlugin({
       template: "./src/index.html",
     }),
+    new Dotenv()
   ],
 });
