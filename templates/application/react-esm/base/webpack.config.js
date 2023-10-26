@@ -1,5 +1,6 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const Dotenv = require('dotenv-webpack');
 
 const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
@@ -67,5 +68,6 @@ module.exports = (_, argv) => ({
       template: "./index.ejs",
       inject: false,
     }),
+    new Dotenv()
   ],
 });
