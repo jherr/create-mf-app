@@ -35,12 +35,15 @@ const buildProfiler = ({
   name,
   css,
   port,
+  packer,
 }: Project) => {
   const profiler: Profiler = {
     NAME: name,
     FRAMEWORK: framework,
     SAFE_NAME: name.replace(/-/g, '_').trim(),
     LANGUAGE: language === 'typescript' ? 'TypeScript' : 'JavaScript',
+    LANGEXT: language === 'typescript' ? 'ts' : 'js',
+    PACKER: packer,
   }
 
   if (type === 'API Server' || type === 'Application') {
@@ -81,10 +84,7 @@ export const buildProject = async (project: Project) => {
       break
 
     case 'API Server':
-      await ncp(
-        path.join(__dirname, `../templates/server/${framework}`),
-        name
-      )
+      await ncp(path.join(__dirname, `../templates/server/${framework}`), name)
       break
     case 'Application':
       {
@@ -97,22 +97,43 @@ export const buildProject = async (project: Project) => {
           name
         )
 
+        let packageJSON: Record<string, any> = {
+          devDependencies: {},
+        }
+
+        if (fs.existsSync(path.join(name, 'package.json'))) {
+          packageJSON = JSON.parse(
+            fs.readFileSync(path.join(name, 'package.json'), 'utf8')
+          )
+        } else {
+          if (profiler.PACKER === 'Webpack') {
+            packageJSON = JSON.parse(
+              fs.readFileSync(path.join(name, 'package.webpack.json'), 'utf8')
+            )
+            fs.unlinkSync(path.join(name, 'rspack.config.js'))
+          } else {
+            packageJSON = JSON.parse(
+              fs.readFileSync(path.join(name, 'package.rspack.json'), 'utf8')
+            )
+            fs.unlinkSync(path.join(name, 'webpack.config.js'))
+          }
+          fs.unlinkSync(path.join(name, 'package.rspack.json'))
+          fs.unlinkSync(path.join(name, 'package.webpack.json'))
+        }
+
         if (profiler.CSS_EXTENSION === 'scss') {
           fs.unlinkSync(path.normalize(`${name}/src/index.css`))
           await ncp(
-              path.join(__dirname, '../templates/application-extras/tailwind'),
-              name
+            path.join(__dirname, '../templates/application-extras/tailwind'),
+            name
           )
 
-          const packageJSON = JSON.parse(
-              fs.readFileSync(path.join(name, 'package.json'), 'utf8')
-          )
           packageJSON.devDependencies.tailwindcss = '^2.0.2'
-          fs.writeFileSync(
-              path.join(name, 'package.json'),
-              JSON.stringify(packageJSON, null, 2)
-          )
         }
+        fs.writeFileSync(
+          path.join(name, 'package.json'),
+          JSON.stringify(packageJSON, null, 2)
+        )
       }
       break
   }

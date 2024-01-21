@@ -1,0 +1,23 @@
+{
+  "name": "{{NAME}}",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "NODE_ENV=production rspack build",
+    "build:dev": "NODE_ENV=development rspack build",
+    "build:start": "cd dist && rspack serve",
+    "start": "NODE_ENV=development rspack serve"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Jack Herrington",
+    "email": "jherr@pobox.com"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.1.0",
+    "postcss": "^8.2.1",
+    "postcss-loader": "^8.0.0",
+    "@rspack/cli": "0.4.2",
+    "@rspack/core": "0.4.2"
+  },
+  "dependencies": {}
+}

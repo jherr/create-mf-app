@@ -87,6 +87,13 @@ import { Project } from '../src/types'
         choices: ['CSS', 'Tailwind'],
         default: 'CSS',
       },
+      {
+        type: 'list',
+        message: 'Packer:',
+        name: 'packer',
+        choices: ['Webpack', 'Rspack'],
+        default: 'Webpack',
+      },
     ])
 
     buildProject({

@@ -1,0 +1,32 @@
+{
+  "name": "{{NAME}}",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "NODE_ENV=production rspack build",
+    "build:dev": "NODE_ENV=development rspack build",
+    "build:start": "cd dist && rspack serve",
+    "start": "NODE_ENV=development rspack serve"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Jack Herrington",
+    "email": "jherr@pobox.com"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-typescript": "^7.23.3",
+    "autoprefixer": "^10.1.0",
+    "babel-loader": "^9.1.3",
+    "babel-preset-solid": "^1.8.9",
+    "postcss": "^8.2.1",
+    "postcss-loader": "^8.0.0",
+    "solid-refresh": "^0.6.3",
+    "@rspack/cli": "0.4.2",
+    "@rspack/core": "0.4.2",
+    "@rspack/plugin-react-refresh": "0.4.2"
+  },
+  "dependencies": {
+    "solid-js": "^1.8.11"
+  }
+}
