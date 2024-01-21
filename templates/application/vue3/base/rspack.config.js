@@ -86,9 +86,6 @@ module.exports = {
       filename: 'remoteEntry.js',
       exposes: {},
       shared: {
-        react: { eager: true },
-        'react-dom': { eager: true },
-        'react-router-dom': { eager: true },
       },
     }),
     new rspack.DefinePlugin({

@@ -9,6 +9,11 @@ module.exports = {
   entry: {
     main: './src/index.{{LANGEXT}}',
   },
+  experiments: {
+    rspackFuture: {
+      disableTransformByDefault: true,
+    },
+  },
   devServer: {
     historyApiFallback: true,
     port: {{PORT}},
@@ -37,31 +42,44 @@ module.exports = {
         type: 'css',
       },
       {
-        test: /\.(jsx?|tsx?)$/,
-        use: [
-          {
-            loader: 'builtin:swc-loader',
-            options: {
-              sourceMap: true,
-              jsc: {
-                parser: {
-                  syntax: 'typescript',
-                  tsx: true,
-                },
-                transform: {
-                },
-              },
-              env: {
-                targets: [
-                  'chrome >= 87',
-                  'edge >= 88',
-                  'firefox >= 78',
-                  'safari >= 14',
-                ],
+        test: /\.(js|jsx)$/,
+        loader: "builtin:swc-loader",
+        options: {
+          sourceMap: true,
+          jsc: {
+            parser: {
+              syntax: "ecmascript",
+              jsx: true,
+            },
+            transform: {
+              react: {
+                runtime: "automatic",
+                importSource: 'preact'
               },
             },
           },
-        ],
+        },
+        type: "javascript/auto",
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        loader: "builtin:swc-loader",
+        options: {
+          sourceMap: true,
+          jsc: {
+            parser: {
+              syntax: "typescript",
+              jsx: true,
+            },
+            transform: {
+              react: {
+                runtime: "automatic",
+                importSource: 'preact'
+              },
+            },
+          },
+        },
+        type: "javascript/auto",
       },
     ],
   },
