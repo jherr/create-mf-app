@@ -13,14 +13,15 @@
     "email": "jherr@pobox.com"
   },
   "devDependencies": {
+    "@rspack/cli": "0.5.4",
+    "@rspack/core": "0.5.4",
+    "@rspack/plugin-react-refresh": "0.5.4",
     "autoprefixer": "^10.1.0",
     "postcss": "^8.2.1",
     "postcss-loader": "^8.0.0",
     "svelte-loader": "^3.1.9",
     "svelte-preprocess": "^5.1.3",
-    "@rspack/cli": "0.4.2",
-    "@rspack/core": "0.4.2",
-    "@rspack/plugin-react-refresh": "0.4.2"
+    "react-refresh": "^0.14.0"
   },
   "dependencies": {
     "svelte": "^4.2.9"

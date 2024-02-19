@@ -13,12 +13,15 @@
     "email": "jherr@pobox.com"
   },
   "devDependencies": {
+    "@rspack/cli": "0.5.4",
+    "@rspack/core": "0.5.4",
+    "@rspack/plugin-react-refresh": "0.5.4",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.1.0",
     "postcss": "^8.2.1",
     "postcss-loader": "^8.0.0",
-    "@rspack/cli": "0.4.2",
-    "@rspack/core": "0.4.2",
-    "@rspack/plugin-react-refresh": "0.4.2"
+    "react-refresh": "^0.14.0"
   },
   "dependencies": {
     "preact": "^10.5.14"

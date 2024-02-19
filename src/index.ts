@@ -128,7 +128,7 @@ export const buildProject = async (project: Project) => {
             name
           )
 
-          packageJSON.devDependencies.tailwindcss = '^2.0.2'
+          packageJSON.devDependencies.tailwindcss = '^3.4.1'
         }
         fs.writeFileSync(
           path.join(name, 'package.json'),

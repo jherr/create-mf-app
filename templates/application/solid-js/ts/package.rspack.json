@@ -13,6 +13,9 @@
     "email": "jherr@pobox.com"
   },
   "devDependencies": {
+    "@rspack/cli": "0.5.4",
+    "@rspack/core": "0.5.4",
+    "@rspack/plugin-react-refresh": "0.5.4",
     "@babel/plugin-transform-runtime": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-typescript": "^7.23.3",
@@ -22,9 +25,7 @@
     "postcss": "^8.2.1",
     "postcss-loader": "^8.0.0",
     "solid-refresh": "^0.6.3",
-    "@rspack/cli": "0.4.2",
-    "@rspack/core": "0.4.2",
-    "@rspack/plugin-react-refresh": "0.4.2"
+    "react-refresh": "^0.14.0"
   },
   "dependencies": {
     "solid-js": "^1.8.11"
