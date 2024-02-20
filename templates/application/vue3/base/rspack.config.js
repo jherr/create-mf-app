@@ -15,6 +15,9 @@ module.exports = {
     historyApiFallback: true,
     port: {{PORT}},
   },
+  resolve: {
+    extensions: ['.js','.ts','.vue','.json']
+  },
   module: {
     rules: [
       {
