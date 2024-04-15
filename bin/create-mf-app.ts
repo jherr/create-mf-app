@@ -6,20 +6,20 @@ import path from 'path'
 import { buildProject } from '../src/index'
 import { Project } from '../src/types'
 ;(async function () {
-  const answers = await inquirer.prompt<Project>([
+  const answers = await inquirer.prompt < Project >([
     {
       type: 'input',
       message: 'Pick the name of your app:',
       name: 'name',
-      default: 'host',
+      default: 'host'
     },
     {
       type: 'list',
       message: 'Project Type:',
       name: 'type',
       choices: ['Application', 'API Server', 'Library'],
-      default: 'Application',
-    },
+      default: 'Application'
+    }
   ])
 
   if (answers.type === 'Library') {
@@ -31,26 +31,26 @@ import { Project } from '../src/types'
       .readdirSync(path.join(__dirname, '../templates/server'))
       .sort()
 
-    const serverAnswers = await inquirer.prompt<Project>([
+    const serverAnswers = await inquirer.prompt < Project >([
       {
         type: 'input',
         message: 'Port number:',
         name: 'port',
-        default: '8080',
+        default: '8080'
       },
       {
         type: 'list',
         message: 'Template:',
         name: 'framework',
         choices: templates,
-        default: 'express',
-      },
+        default: 'express'
+      }
     ])
 
     buildProject({
       ...answers,
       ...serverAnswers,
-      language: 'typescript',
+      language: 'typescript'
     })
   }
 
@@ -59,46 +59,46 @@ import { Project } from '../src/types'
       .readdirSync(path.join(__dirname, '../templates/application'))
       .sort()
 
-    const appAnswers = await inquirer.prompt<Project>([
+    const appAnswers = await inquirer.prompt < Project >([
       {
         type: 'input',
         message: 'Port number:',
         name: 'port',
-        default: '8080',
+        default: '8080'
       },
       {
         type: 'list',
         message: 'Framework:',
         name: 'framework',
         choices: templates,
-        default: 'react',
+        default: 'react'
       },
       {
         type: 'list',
         message: 'Language:',
         name: 'language',
         choices: ['typescript', 'javascript'],
-        default: 'javascript',
+        default: 'javascript'
       },
       {
         type: 'list',
         message: 'CSS:',
         name: 'css',
         choices: ['CSS', 'Tailwind'],
-        default: 'CSS',
+        default: 'CSS'
       },
       {
         type: 'list',
         message: 'Packer:',
         name: 'packer',
         choices: ['Webpack', 'Rspack'],
-        default: 'Webpack',
-      },
+        default: 'Webpack'
+      }
     ])
 
     buildProject({
       ...answers,
-      ...appAnswers,
+      ...appAnswers
     })
   }
 

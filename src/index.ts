@@ -11,7 +11,7 @@ const templateFile = (fileName: string, replacements: Profiler) => {
 
   const template = Object.entries(replacements).reduce((acc, [key, value]) => {
     return acc.replace(
-      new RegExp(`(\{\{${key}\}\}|\{\{ ${key} \}\})`, 'g'),
+      new RegExp(`({{${key}}}|{{ ${key} }})`, 'g'),
       value?.toString() ?? ''
     )
   }, fileContent)
@@ -35,7 +35,7 @@ const buildProfiler = ({
   name,
   css,
   port,
-  packer,
+  packer
 }: Project) => {
   const profiler: Profiler = {
     NAME: name,
@@ -43,7 +43,7 @@ const buildProfiler = ({
     SAFE_NAME: name.replace(/-/g, '_').trim(),
     LANGUAGE: language === 'typescript' ? 'TypeScript' : 'JavaScript',
     LANGEXT: language === 'typescript' ? 'ts' : 'js',
-    PACKER: packer,
+    PACKER: packer
   }
 
   if (type === 'API Server' || type === 'Application') {
@@ -75,6 +75,10 @@ export const buildProject = async (project: Project) => {
   const tempDir = type.toLowerCase()
   const profiler = buildProfiler(project)
 
+  let packageJSON: Record<string, any> = {
+    devDependencies: {}
+  }
+
   switch (type) {
     case 'Library':
       await ncp(
@@ -87,54 +91,48 @@ export const buildProject = async (project: Project) => {
       await ncp(path.join(__dirname, `../templates/server/${framework}`), name)
       break
     case 'Application':
-      {
-        await ncp(
-          path.join(__dirname, `../templates/${tempDir}/${framework}/base`),
-          name
-        )
-        await ncp(
-          path.join(__dirname, `../templates/${tempDir}/${framework}/${lang}`),
-          name
-        )
+      await ncp(
+        path.join(__dirname, `../templates/${tempDir}/${framework}/base`),
+        name
+      )
+      await ncp(
+        path.join(__dirname, `../templates/${tempDir}/${framework}/${lang}`),
+        name
+      )
 
-        let packageJSON: Record<string, any> = {
-          devDependencies: {},
-        }
-
-        if (fs.existsSync(path.join(name, 'package.json'))) {
+      if (fs.existsSync(path.join(name, 'package.json'))) {
+        packageJSON = JSON.parse(
+          fs.readFileSync(path.join(name, 'package.json'), 'utf8')
+        )
+      } else {
+        if (profiler.PACKER === 'Webpack') {
           packageJSON = JSON.parse(
-            fs.readFileSync(path.join(name, 'package.json'), 'utf8')
+            fs.readFileSync(path.join(name, 'package.webpack.json'), 'utf8')
           )
+          fs.unlinkSync(path.join(name, 'rspack.config.js'))
         } else {
-          if (profiler.PACKER === 'Webpack') {
-            packageJSON = JSON.parse(
-              fs.readFileSync(path.join(name, 'package.webpack.json'), 'utf8')
-            )
-            fs.unlinkSync(path.join(name, 'rspack.config.js'))
-          } else {
-            packageJSON = JSON.parse(
-              fs.readFileSync(path.join(name, 'package.rspack.json'), 'utf8')
-            )
-            fs.unlinkSync(path.join(name, 'webpack.config.js'))
-          }
-          fs.unlinkSync(path.join(name, 'package.rspack.json'))
-          fs.unlinkSync(path.join(name, 'package.webpack.json'))
-        }
-
-        if (profiler.CSS_EXTENSION === 'scss') {
-          fs.unlinkSync(path.normalize(`${name}/src/index.css`))
-          await ncp(
-            path.join(__dirname, '../templates/application-extras/tailwind'),
-            name
+          packageJSON = JSON.parse(
+            fs.readFileSync(path.join(name, 'package.rspack.json'), 'utf8')
           )
-
-          packageJSON.devDependencies.tailwindcss = '^3.4.1'
+          fs.unlinkSync(path.join(name, 'webpack.config.js'))
         }
-        fs.writeFileSync(
-          path.join(name, 'package.json'),
-          JSON.stringify(packageJSON, null, 2)
-        )
+        fs.unlinkSync(path.join(name, 'package.rspack.json'))
+        fs.unlinkSync(path.join(name, 'package.webpack.json'))
       }
+
+      if (profiler.CSS_EXTENSION === 'scss') {
+        fs.unlinkSync(path.normalize(`${name}/src/index.css`))
+        await ncp(
+          path.join(__dirname, '../templates/application-extras/tailwind'),
+          name
+        )
+
+        packageJSON.devDependencies.tailwindcss = '^3.4.1'
+      }
+      fs.writeFileSync(
+        path.join(name, 'package.json'),
+        JSON.stringify(packageJSON, null, 2)
+      )
       break
   }
   renameGitignore(name)
