@@ -8,7 +8,7 @@ export type Profiler = {
   CSS_EXTENSION?: 'css' | 'scss' | 'less';
   CSS?: 'Tailwind' | 'Empty CSS';
   CONTAINER?: string;
-  PACKER?: 'Webpack' | 'Rspack';
+  BUNDLER?: 'Webpack' | 'Rspack';
 };
 
 export type Project = {
@@ -18,5 +18,5 @@ export type Project = {
   port?: number;
   name: string;
   type: 'Application' | 'Library' | 'API Server';
-  packer?: 'Webpack' | 'Rspack';
+  bundler?: 'Webpack' | 'Rspack';
 };
