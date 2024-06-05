@@ -35,7 +35,7 @@ const buildProfiler = ({
   name,
   css,
   port,
-  packer
+  bundler
 }: Project) => {
   const profiler: Profiler = {
     NAME: name,
@@ -43,7 +43,7 @@ const buildProfiler = ({
     SAFE_NAME: name.replace(/-/g, '_').trim(),
     LANGUAGE: language === 'typescript' ? 'TypeScript' : 'JavaScript',
     LANGEXT: language === 'typescript' ? 'ts' : 'js',
-    PACKER: packer
+    BUNDLER: bundler
   }
 
   if (type === 'API Server' || type === 'Application') {
@@ -105,7 +105,7 @@ export const buildProject = async (project: Project) => {
           fs.readFileSync(path.join(name, 'package.json'), 'utf8')
         )
       } else {
-        if (profiler.PACKER === 'Webpack') {
+        if (profiler.BUNDLER === 'Webpack') {
           packageJSON = JSON.parse(
             fs.readFileSync(path.join(name, 'package.webpack.json'), 'utf8')
           )

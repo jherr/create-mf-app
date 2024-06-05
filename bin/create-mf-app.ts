@@ -5,8 +5,8 @@ import fs from 'fs'
 import path from 'path'
 import { buildProject } from '../src/index'
 import { Project } from '../src/types'
-;(async function () {
-  const answers = await inquirer.prompt < Project >([
+; (async function () {
+  const answers = await inquirer.prompt<Project>([
     {
       type: 'input',
       message: 'Pick the name of your app:',
@@ -31,7 +31,7 @@ import { Project } from '../src/types'
       .readdirSync(path.join(__dirname, '../templates/server'))
       .sort()
 
-    const serverAnswers = await inquirer.prompt < Project >([
+    const serverAnswers = await inquirer.prompt<Project>([
       {
         type: 'input',
         message: 'Port number:',
@@ -59,7 +59,7 @@ import { Project } from '../src/types'
       .readdirSync(path.join(__dirname, '../templates/application'))
       .sort()
 
-    const appAnswers = await inquirer.prompt < Project >([
+    const appAnswers = await inquirer.prompt<Project>([
       {
         type: 'input',
         message: 'Port number:',
@@ -89,8 +89,8 @@ import { Project } from '../src/types'
       },
       {
         type: 'list',
-        message: 'Packer:',
-        name: 'packer',
+        message: 'Bundler:',
+        name: 'bundler',
         choices: ['Webpack', 'Rspack'],
         default: 'Webpack'
       }
