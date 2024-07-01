@@ -1,6 +1,10 @@
 const rspack = require('@rspack/core')
 const refreshPlugin = require('@rspack/plugin-react-refresh')
 const isDev = process.env.NODE_ENV === 'development'
+const path = require('path');
+
+const printCompilationMessage = require('./compilation.config.js');
+
 /**
  * @type {import('@rspack/cli').Configuration}
  */
@@ -9,10 +13,28 @@ module.exports = {
   entry: {
     main: './src/index.{{LANGEXT}}',
   },
+  
   devServer: {
-    historyApiFallback: true,
     port: {{PORT}},
+    historyApiFallback: true,
+    watchFiles: [path.resolve(__dirname, 'src')],
+    onListening: function (devServer) {
+      const port = devServer.server.address().port
+
+      printCompilationMessage('compiling', port)
+
+      devServer.compiler.hooks.done.tap('OutputMessagePlugin', (stats) => {
+        setImmediate(() => {
+          if (stats.hasErrors()) {
+            printCompilationMessage('failure', port)
+          } else {
+            printCompilationMessage('success', port)
+          }
+        })
+      })
+    }
   },
+
   resolve: {
     extensions: ['.js','.ts','.json']
   },
