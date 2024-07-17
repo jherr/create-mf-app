@@ -19,8 +19,8 @@ const templateFile = (fileName: string, replacements: Profiler) => {
 }
 
 const copyCompilationConfig = (projectName: string) => {
-  const sourcePath = path.join(__dirname, '../templates/compiler/compilation.config.js')
-  const destinationPath = path.join(projectName, 'compilation.config.js')
+  const sourcePath = path.resolve(__dirname, '../templates/compiler/compilation.config.js')
+  const destinationPath = path.resolve(projectName, 'compilation.config.js')
 
   fs.copyFileSync(sourcePath, destinationPath)
 }
