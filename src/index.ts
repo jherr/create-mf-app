@@ -18,6 +18,13 @@ const templateFile = (fileName: string, replacements: Profiler) => {
   fs.writeFileSync(fileName, template)
 }
 
+const copyCompilationConfig = (projectName: string) => {
+  const sourcePath = path.join(__dirname, '../templates/compiler/compilation.config.js')
+  const destinationPath = path.join(projectName, 'compilation.config.js')
+
+  fs.copyFileSync(sourcePath, destinationPath)
+}
+
 // required for npm publish
 const renameGitignore = (projectName: string) => {
   if (fs.existsSync(path.normalize(`${projectName}/gitignore`))) {
@@ -135,6 +142,9 @@ export const buildProject = async (project: Project) => {
       )
       break
   }
+
+  copyCompilationConfig(name)
+
   renameGitignore(name)
 
   glob.sync(`${name}/**/*`).forEach((file) => {
