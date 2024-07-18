@@ -2,10 +2,10 @@
   "name": "{{NAME}}",
   "version": "1.0.0",
   "scripts": {
-    "build": "NODE_ENV=production rspack build",
-    "build:dev": "NODE_ENV=development rspack build",
+    "build": "rspack build",
+    "build:dev": "rspack build",
     "build:start": "cd dist && rspack serve",
-    "start": "NODE_ENV=development rspack serve"
+    "start": "rspack serve"
   },
   "license": "MIT",
   "author": {
