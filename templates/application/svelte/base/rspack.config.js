@@ -6,6 +6,8 @@ const sveltePreprocess = require('svelte-preprocess')
 
 const prod = process.env.NODE_ENV === 'production'
 
+const printCompilationMessage = require('./compilation.config.js');
+
 /**
  * @type {import('@rspack/cli').Configuration}
  */
@@ -14,10 +16,28 @@ module.exports = {
   entry: {
     main: './src/index.{{LANGEXT}}',
   },
+  
   devServer: {
-    historyApiFallback: true,
     port: {{PORT}},
+    historyApiFallback: true,
+    watchFiles: [path.resolve(__dirname, 'src')],
+    onListening: function (devServer) {
+      const port = devServer.server.address().port
+
+      printCompilationMessage('compiling', port)
+
+      devServer.compiler.hooks.done.tap('OutputMessagePlugin', (stats) => {
+        setImmediate(() => {
+          if (stats.hasErrors()) {
+            printCompilationMessage('failure', port)
+          } else {
+            printCompilationMessage('success', port)
+          }
+        })
+      })
+    }
   },
+
   resolve: {
     alias: {
       svelte: path.dirname(require.resolve('svelte/package.json')),

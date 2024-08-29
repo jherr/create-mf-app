@@ -4,8 +4,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "start": "webpack-dev-server --open --mode development",
-    "start:live": "webpack-dev-server --open --mode development --live-reload"
+    "start": "webpack-dev-server --mode development",
+    "start:live": "webpack-dev-server --mode development --live-reload"
   },
   "license": "MIT",
   "author": {

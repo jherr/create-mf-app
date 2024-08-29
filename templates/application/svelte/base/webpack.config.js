@@ -8,6 +8,8 @@ const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
 
 const deps = require("./package.json").dependencies;
+const printCompilationMessage = require('./compilation.config.js');
+
 module.exports = (_, argv) => ({
   output: {
     publicPath: "http://localhost:{{PORT}}/",
@@ -28,6 +30,22 @@ module.exports = (_, argv) => ({
   devServer: {
     port: {{PORT}},
     historyApiFallback: true,
+    watchFiles: [path.resolve(__dirname, 'src')],
+    onListening: function (devServer) {
+      const port = devServer.server.address().port
+
+      printCompilationMessage('compiling', port)
+
+      devServer.compiler.hooks.done.tap('OutputMessagePlugin', (stats) => {
+        setImmediate(() => {
+          if (stats.hasErrors()) {
+            printCompilationMessage('failure', port)
+          } else {
+            printCompilationMessage('success', port)
+          }
+        })
+      })
+    }
   },
 
   module: {
