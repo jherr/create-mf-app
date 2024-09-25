@@ -140,10 +140,10 @@ export const buildProject = async (project: Project) => {
         path.join(name, 'package.json'),
         JSON.stringify(packageJSON, null, 2)
       )
+
+      copyCompilationConfig(name)
       break
   }
-
-  copyCompilationConfig(name)
 
   renameGitignore(name)
 
