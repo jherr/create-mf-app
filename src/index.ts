@@ -1,7 +1,7 @@
 import util from "util";
 import fs from "node:fs";
 import path from "node:path";
-import { glob, } from "glob";
+import { glob } from "glob";
 
 export type Project = {
   framework?: string;
@@ -44,17 +44,11 @@ const renameGitignore = (projectName: string) => {
   }
 };
 
-const buildProfiler = ({
-  type,
-  framework,
-  name,
-  css,
-  port
-}: Project) => {
+const buildProfiler = ({ type, framework, name, css, port }: Project) => {
   const profiler: Profiler = {
     NAME: name,
     FRAMEWORK: framework,
-    SAFE_NAME: name.replace(/-/g, "_").trim()
+    SAFE_NAME: name.replace(/-/g, "_").trim(),
   };
 
   if (type === "API" || type === "Application") {
@@ -82,10 +76,7 @@ export const buildProject = async (project: Project) => {
       name
     );
 
-    const pkg = fs.readFileSync(
-      path.join(name, "package.json"),
-      "utf8"
-    );
+    const pkg = fs.readFileSync(path.join(name, "package.json"), "utf8");
     const packageJSON = JSON.parse(pkg);
     packageJSON.devDependencies = packageJSON.devDependencies || {};
 
@@ -94,7 +85,8 @@ export const buildProject = async (project: Project) => {
         path.join(__dirname, "../templates/application-extras/tailwind"),
         name
       );
-      packageJSON.devDependencies.tailwindcss = "^3.4.1";
+      packageJSON.devDependencies["@tailwindcss/postcss"] = "^4.0.3";
+      packageJSON.devDependencies["tailwindcss"] = "^4.0.3";
     }
 
     fs.writeFileSync(
@@ -103,10 +95,7 @@ export const buildProject = async (project: Project) => {
     );
   }
   if (type === "Library") {
-    await ncp(
-      path.join(__dirname, `../templates/${tempDir}/typescript`),
-      name
-    );
+    await ncp(path.join(__dirname, `../templates/${tempDir}/typescript`), name);
   }
   if (type === "API") {
     await ncp(path.join(__dirname, `../templates/server/${framework}`), name);
