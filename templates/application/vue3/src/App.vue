@@ -2,7 +2,11 @@
   <div class="{{CONTAINER}}">
     <div>Name: {{ NAME }}</div>
     <div>Framework: {{ FRAMEWORK }}</div>
-    <div>Language: {{ LANGUAGE }}</div>
-    <div>CSS: {{ CSS }}</div>
   </div>
 </template>
+
+<script lang="ts">
+  import { defineComponent } from 'vue'
+
+  export default defineComponent({});
+</script>
