@@ -10,22 +10,24 @@ import {
 } from "@clack/prompts";
 import fs from "node:fs";
 import path from "node:path";
-import { program } from "commander";
+import { program, } from "commander";
 
 import { buildProject, Project, } from "../src";
 
 program
+  .option("-n, --name <name>", "The name of the project")
   .option("-t, --type <type>", "The type of project to create")
   .option("-f, --framework <framework>", "The framework to use")
   .option("-p, --port <number>", "The port to use")
-  .option("-c, --css <css>", "The CSS framework to use (CSS or Tailwind)")
-  .argument("<string>");
+  .option("-c, --css <css>", "The CSS framework to use (CSS or Tailwind)");
 
 program.parse();
 
+console.log(program.options);
+
 const options = program.opts();
 
-function checkCancel(value: string | symbol) {
+function checkCancel (value: string | symbol) {
   if (isCancel(value)) {
     cancel("Operation cancelled.");
     process.exit(0);
@@ -40,8 +42,8 @@ function checkCancel(value: string | symbol) {
     type: "Application"
   };
 
-  if(program.args?.[0]) {
-    answers.name = program.args?.[0];
+  if (options.name) {
+    answers.name = options.name;
   } else {
     answers.name = (await text({
       message: "What is the name of your app?",
@@ -50,7 +52,7 @@ function checkCancel(value: string | symbol) {
     checkCancel(answers.name);
   }
 
-  if(options.type) {
+  if (options.type) {
     answers.type = options.type;
   } else {
     answers.type = (await select({
@@ -61,8 +63,8 @@ function checkCancel(value: string | symbol) {
         { value: "Library", label: "Library" }
       ]
     })) as typeof answers.type;
-  checkCancel(answers.type);
-}
+    checkCancel(answers.type);
+  }
 
   if (answers.type === "Application" || answers.type === "API Server") {
     const templates = fs
@@ -76,9 +78,9 @@ function checkCancel(value: string | symbol) {
       )
       .sort();
 
-    if(options.port) {
+    if (options.port) {
       answers.port = Number(options.port);
-    } else {  
+    } else {
       const port = (await text({
         message: "Port number?",
         initialValue: "8080"
@@ -87,7 +89,7 @@ function checkCancel(value: string | symbol) {
       answers.port = Number(port);
     }
 
-    if(options.framework) {
+    if (options.framework) {
       answers.framework = options.framework;
     } else {
       answers.framework = (await select({
@@ -102,9 +104,9 @@ function checkCancel(value: string | symbol) {
     }
 
     if (answers.type === "Application") {
-      if(options.css) {
+      if (options.css) {
         answers.css = options.css;
-      } else {  
+      } else {
         answers.css = (await select({
           message: "CSS?",
           options: [
