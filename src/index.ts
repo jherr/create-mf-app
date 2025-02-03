@@ -1,9 +1,24 @@
 import util from "util";
 import fs from "node:fs";
 import path from "node:path";
-import glob from "glob";
+import { glob } from "glob";
 
-import { Profiler, Project, } from "./types";
+export type Project = {
+  framework?: string;
+  css?: "CSS" | "Tailwind";
+  port?: number;
+  name: string;
+  type: "Application" | "Library" | "API Server";
+};
+
+type Profiler = {
+  NAME: string;
+  FRAMEWORK: string | undefined;
+  SAFE_NAME: string;
+  PORT?: number;
+  CSS?: "Tailwind" | "Empty CSS";
+  CONTAINER?: string;
+};
 
 const ncp = util.promisify(require("ncp").ncp);
 
@@ -19,13 +34,6 @@ const templateFile = (fileName: string, replacements: Profiler) => {
   fs.writeFileSync(fileName, template);
 };
 
-const copyCompilationConfig = (projectName: string) => {
-  const sourcePath = path.resolve(__dirname, "../templates/compiler/compilation.config.js");
-  const destinationPath = path.resolve(projectName, "compilation.config.js");
-
-  fs.copyFileSync(sourcePath, destinationPath);
-};
-
 // required for npm publish
 const renameGitignore = (projectName: string) => {
   if (fs.existsSync(path.normalize(`${projectName}/gitignore`))) {
@@ -39,19 +47,14 @@ const renameGitignore = (projectName: string) => {
 const buildProfiler = ({
   type,
   framework,
-  language,
   name,
   css,
   port,
-  bundler
 }: Project) => {
   const profiler: Profiler = {
     NAME: name,
     FRAMEWORK: framework,
-    SAFE_NAME: name.replace(/-/g, "_").trim(),
-    LANGUAGE: language === "typescript" ? "TypeScript" : "JavaScript",
-    LANGEXT: language === "typescript" ? "ts" : "js",
-    BUNDLER: bundler
+    SAFE_NAME: name.replace(/-/g, "_").trim()
   };
 
   if (type === "API Server" || type === "Application") {
@@ -60,7 +63,6 @@ const buildProfiler = ({
 
   if (type === "Application") {
     const isTailwind = css === "Tailwind";
-    profiler.CSS_EXTENSION = isTailwind ? "scss" : "css";
     profiler.CONTAINER = isTailwind
       ? "mt-10 text-3xl mx-auto max-w-6xl"
       : "container";
@@ -69,17 +71,8 @@ const buildProfiler = ({
   return profiler;
 };
 
-// Options:
-//   - type: "Application", "Library", "Server"
-//   - name: Name of the project
-//   - framework: Name of the framework
-//   - language: Language of the project
-//   - css: CSS framework
-//   - port: Port to run the project on
-
 export const buildProject = async (project: Project) => {
-  const { language, name, framework, type } = project;
-  const lang = language === "typescript" ? "ts" : "js";
+  const { name, framework, type } = project;
   const tempDir = type.toLowerCase();
   const profiler = buildProfiler(project);
 
@@ -100,49 +93,29 @@ export const buildProject = async (project: Project) => {
       break;
     case "Application":
       await ncp(
-        path.join(__dirname, `../templates/${tempDir}/${framework}/base`),
-        name
-      );
-      await ncp(
-        path.join(__dirname, `../templates/${tempDir}/${framework}/${lang}`),
+        path.join(__dirname, `../templates/${tempDir}/${framework}`),
         name
       );
 
-      if (fs.existsSync(path.join(name, "package.json"))) {
-        packageJSON = JSON.parse(
-          fs.readFileSync(path.join(name, "package.json"), "utf8")
-        );
-      } else {
-        if (profiler.BUNDLER === "Webpack") {
-          packageJSON = JSON.parse(
-            fs.readFileSync(path.join(name, "package.webpack.json"), "utf8")
-          );
-          fs.unlinkSync(path.join(name, "rspack.config.js"));
-        } else {
-          packageJSON = JSON.parse(
-            fs.readFileSync(path.join(name, "package.rspack.json"), "utf8")
-          );
-          fs.unlinkSync(path.join(name, "webpack.config.js"));
-        }
-        fs.unlinkSync(path.join(name, "package.rspack.json"));
-        fs.unlinkSync(path.join(name, "package.webpack.json"));
-      }
-
-      if (profiler.CSS_EXTENSION === "scss") {
-        fs.unlinkSync(path.normalize(`${name}/src/index.css`));
+      if (project.css === "Tailwind") {
         await ncp(
           path.join(__dirname, "../templates/application-extras/tailwind"),
           name
         );
-
         packageJSON.devDependencies.tailwindcss = "^3.4.1";
       }
+
+      const pkg = fs.readFileSync(
+        path.join(name, "package.json"),
+        "utf8"
+      );
+      packageJSON = JSON.parse(pkg);
+
       fs.writeFileSync(
         path.join(name, "package.json"),
         JSON.stringify(packageJSON, null, 2)
       );
 
-      copyCompilationConfig(name);
       break;
   }
 

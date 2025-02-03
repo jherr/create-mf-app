@@ -11,8 +11,7 @@ import {
 import fs from "node:fs";
 import path from "node:path";
 
-import { buildProject, } from "../src/index";
-import { Project, } from "../src/types";
+import { buildProject, Project } from "../src";
 
 function checkCancel (value: string | symbol) {
   if (isCancel(value)) {
@@ -76,16 +75,6 @@ function checkCancel (value: string | symbol) {
     checkCancel(answers.framework);
 
     if (answers.type === "Application") {
-      answers.language = (await select({
-        message: "Language?",
-        options: [
-          { value: "typescript", label: "TypeScript" },
-          { value: "javascript", label: "JavaScript" }
-        ],
-        initialValue: "typescript"
-      })) as "typescript" | "javascript";
-      checkCancel(answers.language);
-
       answers.css = (await select({
         message: "CSS?",
         options: [
@@ -95,16 +84,6 @@ function checkCancel (value: string | symbol) {
         initialValue: "Tailwind"
       })) as "CSS" | "Tailwind";
       checkCancel(answers.css);
-
-      answers.bundler = (await select({
-        message: "Bundler?",
-        options: [
-          { value: "Webpack", label: "Webpack" },
-          { value: "Rspack", label: "Rspack" }
-        ],
-        initialValue: "Rspack"
-      })) as "Webpack" | "Rspack";
-      checkCancel(answers.bundler);
     }
   }
 
@@ -112,7 +91,6 @@ function checkCancel (value: string | symbol) {
   s.start("Building project...");
   buildProject({
     ...answers,
-    language: "typescript"
   });
   s.stop("Project built.");
 
