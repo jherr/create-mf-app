@@ -1,115 +1,125 @@
 #!/usr/bin/env node
-import inquirer from 'inquirer'
-import shell from 'shelljs'
-import fs from 'fs'
-import path from 'path'
-import { buildProject } from '../src/index'
-import { Project } from '../src/types'
-; (async function () {
-  const answers = await inquirer.prompt<Project>([
-    {
-      type: 'input',
-      message: 'Pick the name of your app:',
-      name: 'name',
-      default: 'host'
-    },
-    {
-      type: 'list',
-      message: 'Project Type:',
-      name: 'type',
-      choices: ['Application', 'API Server', 'Library'],
-      default: 'Application'
+import {
+  intro,
+  outro,
+  text,
+  isCancel,
+  cancel,
+  select,
+  spinner,
+} from "@clack/prompts";
+import fs from "node:fs";
+import path from "node:path";
+
+import { buildProject, } from "../src/index";
+import { Project, } from "../src/types";
+
+function checkCancel (value: string | symbol) {
+  if (isCancel(value)) {
+    cancel("Operation cancelled.");
+    process.exit(0);
+  }
+}
+
+(async () => {
+  intro("Create Module Federation App (create-mf-app) V2");
+
+  const answers: Project = {
+    name: "",
+    type: "Application"
+  };
+
+  answers.name = (await text({
+    message: "What is the name of your app?",
+    placeholder: "my-awesome-app"
+  })) as string;
+  checkCancel(answers.name);
+
+  answers.type = (await select({
+    message: "Pick a project type.",
+    options: [
+      { value: "Application", label: "Application" },
+      { value: "API Server", label: "API Server" },
+      { value: "Library", label: "Library" }
+    ]
+  })) as typeof answers.type;
+
+  checkCancel(answers.type);
+
+  if (answers.type === "Application" || answers.type === "API Server") {
+    const templates = fs
+      .readdirSync(
+        path.join(
+          __dirname,
+          answers.type === "Application"
+            ? "../templates/application"
+            : "../templates/server"
+        )
+      )
+      .sort();
+
+    const port = (await text({
+      message: "Port number?",
+      initialValue: "8080"
+    })) as string;
+    checkCancel(port);
+    answers.port = Number(port);
+
+    answers.framework = (await select({
+      message: "Framework?",
+      options: templates.map((template) => ({
+        value: template,
+        label: template
+      })),
+      initialValue: answers.type === "Application" ? "react" : "express"
+    })) as string;
+    checkCancel(answers.framework);
+
+    if (answers.type === "Application") {
+      answers.language = (await select({
+        message: "Language?",
+        options: [
+          { value: "typescript", label: "TypeScript" },
+          { value: "javascript", label: "JavaScript" }
+        ],
+        initialValue: "typescript"
+      })) as "typescript" | "javascript";
+      checkCancel(answers.language);
+
+      answers.css = (await select({
+        message: "CSS?",
+        options: [
+          { value: "CSS", label: "CSS" },
+          { value: "Tailwind", label: "Tailwind" }
+        ],
+        initialValue: "Tailwind"
+      })) as "CSS" | "Tailwind";
+      checkCancel(answers.css);
+
+      answers.bundler = (await select({
+        message: "Bundler?",
+        options: [
+          { value: "Webpack", label: "Webpack" },
+          { value: "Rspack", label: "Rspack" }
+        ],
+        initialValue: "Rspack"
+      })) as "Webpack" | "Rspack";
+      checkCancel(answers.bundler);
     }
-  ])
-
-  if (answers.type === 'Library') {
-    buildProject(answers)
   }
 
-  if (answers.type === 'API Server') {
-    const templates = fs
-      .readdirSync(path.join(__dirname, '../templates/server'))
-      .sort()
+  const s = spinner();
+  s.start("Building project...");
+  buildProject({
+    ...answers,
+    language: "typescript"
+  });
+  s.stop("Project built.");
 
-    const serverAnswers = await inquirer.prompt<Project>([
-      {
-        type: 'input',
-        message: 'Port number:',
-        name: 'port',
-        default: '8080'
-      },
-      {
-        type: 'list',
-        message: 'Template:',
-        name: 'framework',
-        choices: templates,
-        default: 'express'
-      }
-    ])
-
-    buildProject({
-      ...answers,
-      ...serverAnswers,
-      language: 'typescript'
-    })
-  }
-
-  if (answers.type === 'Application') {
-    const templates = fs
-      .readdirSync(path.join(__dirname, '../templates/application'))
-      .sort()
-
-    const appAnswers = await inquirer.prompt<Project>([
-      {
-        type: 'input',
-        message: 'Port number:',
-        name: 'port',
-        default: '8080'
-      },
-      {
-        type: 'list',
-        message: 'Framework:',
-        name: 'framework',
-        choices: templates,
-        default: 'react'
-      },
-      {
-        type: 'list',
-        message: 'Language:',
-        name: 'language',
-        choices: ['typescript', 'javascript'],
-        default: 'javascript'
-      },
-      {
-        type: 'list',
-        message: 'CSS:',
-        name: 'css',
-        choices: ['CSS', 'Tailwind'],
-        default: 'CSS'
-      },
-      {
-        type: 'list',
-        message: 'Bundler:',
-        name: 'bundler',
-        choices: ['Webpack', 'Rspack'],
-        default: 'Webpack'
-      }
-    ])
-
-    buildProject({
-      ...answers,
-      ...appAnswers
-    })
-  }
-
-  shell.echo(`Your '${answers.name}' project is ready to go.
-
-Next steps:
+  outro(`Your '${answers.name}' project is ready to go. Next steps:
 
 cd ${answers.name}
-
 npm install
-
 npm start
-`)
-})()
+`);
+})();
