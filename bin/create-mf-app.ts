@@ -23,8 +23,6 @@ program
 
 program.parse();
 
-console.log(program.options);
-
 const options = program.opts();
 
 function checkCancel (value: string | symbol) {
