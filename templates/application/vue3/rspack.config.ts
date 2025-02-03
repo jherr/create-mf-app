@@ -25,6 +25,7 @@ export default defineConfig({
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
   },
+
   output: {
     // You need to set a unique value that is not equal to other applications
     uniqueName: "{{SAFE_NAME}}",
@@ -44,6 +45,11 @@ export default defineConfig({
         options: {
           experimentalInlineMatchResource: true,
         },
+      },
+      {
+        test: /\.css$/,
+        use: ["postcss-loader"],
+        type: "css",
       },
       {
         test: /\.svg$/,

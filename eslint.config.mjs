@@ -1,10 +1,9 @@
-import globals from "globals";
 import tseslint from "typescript-eslint";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default {
   plugins: {
-    '@typescript-eslint': tseslint.plugin,
+    "@typescript-eslint": tseslint.plugin,
   },
   languageOptions: {
     parser: tseslint.parser,

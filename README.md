@@ -6,105 +6,48 @@ Creates a Module Federation application, API server, or library based on one of 
 
 ## Usage
 
-```
+```shell
 npx create-mf-app
 ```
 
 These projects are not production complete. They are designed as lightweight projects that can be used to quickly prototype a new feature or library.
 
-## Programmatic Questions
+## CLI Usage
 
-```
-Pick the name of your app? (host)
-```
+Without any arguments, the CLI will prompt you for the information required to create the project.
 
-Press ```enter``` for the default host directory. Type ```.``` for the current directory or type the name of the new directory.
-
-```
-Project Type: 
-  > Application
-    API Server
-    Library
+```shell
+npx create-mf-app
 ```
 
-Chose the Application, API Server, or Library.
+You can also get help for the CLI for the options available.
 
-### Application
-
-```
-Port number: (8080)
+```shell
+npx create-mf-app --help
 ```
 
-Type a port number or press ```enter``` for the default port 8080.
+You can create an application using CLI options:
 
-```
-Framework: (Use arrow keys)
-    lit-html
-    mithril
-    preact
-  > react
-    react-esm
-    solid-js
-    svelte
-    vanilla
-    vue2
-    vue3
-    inferno
+```shell
+npx create-mf-app --name my-remote --port 8080 --css Tailwind --template react-19
 ```
 
-Chose desired framework.
+Shorthand versions of each option are also available:
 
+```shell
+npx create-mf-app -n my-remote -p 8080 -c Tailwind -t react-19
 ```
-Language:
-  > typescript
-    javascript
-```
-
-Chose your preferred programming language: javascript or typescript
-
-```
-CSS:
-  > CSS
-    Tailwind
-```
-
-Chose your desired form of styling. Tailwind will generate extra files.
-
-### API Server
-
-```
-Port number: (8080)
-```
-
-Type a port number or press ```enter``` for the default port 8080.
-
-```
-Template:
-  > express
-    graphql-apollo
-    graphql-nexus
-    graphql-subscriptions
-    nextjs-auth
-    nextjs-todo
-```
-
-Select the desired API template.
-
-### Library
-
-A typescript file library will be automatically generated.
 
 ## Programmatic Usage
 
 ```js
-const { buildProject } = require('create-mf-app')
+const { buildProject } = require("create-mf-app");
 
 buildProject({
-  type: 'Application',
-  name: 'my-project',
-  port: '8080',
-  framework: 'react',
-  language: 'typescript',
-  css: 'Tailwind',
-})
+  type: "Application",
+  name: "my-remote",
+  port: "8080",
+  framework: "react-19",
+  css: "Tailwind",
+});
 ```

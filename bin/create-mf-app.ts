@@ -10,22 +10,63 @@ import {
 } from "@clack/prompts";
 import fs from "node:fs";
 import path from "node:path";
-import { program, } from "commander";
+import { program } from "commander";
 
-import { buildProject, Project, } from "../src";
+import { buildProject, Project } from "../src";
+
+const applicationTemplates = fs
+  .readdirSync(path.join(__dirname, "../templates/application"))
+  .sort();
+
+const serverTemplates = fs
+  .readdirSync(path.join(__dirname, "../templates/server"))
+  .sort();
+
+const templates = [
+  ...applicationTemplates.map((t) => ({
+    framework: t,
+    type: "Application",
+  })),
+  ...serverTemplates.map((t) => ({
+    framework: t,
+    type: "Server",
+  })),
+  {
+    framework: "library",
+    type: "Library",
+  },
+];
 
 program
   .option("-n, --name <name>", "The name of the project")
-  .option("-t, --type <type>", "The type of project to create (Application, API, Library)")
-  .option("-f, --framework <framework>", "The framework to use")
+  .option(
+    "-t, --template <template>",
+    `The template to use (${templates.map((t) => t.framework).join(", ")})`
+  )
   .option("-p, --port <number>", "The port to use")
-  .option("-c, --css <css>", "The CSS framework to use (CSS or Tailwind)");
+  .option("-c, --css <css>", "The CSS framework to use (CSS or Tailwind)")
+  .option("-h, --help", "Help");
 
 program.parse();
 
 const options = program.opts();
 
-function checkCancel (value: string | symbol) {
+if (options.help) {
+  program.outputHelp();
+  process.exit(0);
+}
+
+if (options.template) {
+  const template = templates.find((t) => t.framework === options.template);
+  if (!template) {
+    console.log(`Invalid template: ${options.template}`);
+    process.exit(1);
+  }
+  options.type = template.type;
+  options.framework = template.framework;
+}
+
+function checkCancel(value: string | symbol) {
   if (isCancel(value)) {
     cancel("Operation cancelled.");
     process.exit(0);
@@ -37,7 +78,7 @@ function checkCancel (value: string | symbol) {
 
   const answers: Project = {
     name: "",
-    type: "Application"
+    type: "Application",
   };
 
   if (options.name) {
@@ -45,7 +86,7 @@ function checkCancel (value: string | symbol) {
   } else {
     answers.name = (await text({
       message: "What is the name of your app?",
-      placeholder: "my-awesome-app"
+      placeholder: "my-awesome-app",
     })) as string;
     checkCancel(answers.name);
   }
@@ -58,30 +99,22 @@ function checkCancel (value: string | symbol) {
       options: [
         { value: "Application", label: "Application" },
         { value: "API", label: "API" },
-        { value: "Library", label: "Library" }
-      ]
+        { value: "Library", label: "Library" },
+      ],
     })) as typeof answers.type;
     checkCancel(answers.type);
   }
 
   if (answers.type === "Application" || answers.type === "API") {
-    const templates = fs
-      .readdirSync(
-        path.join(
-          __dirname,
-          answers.type === "Application"
-            ? "../templates/application"
-            : "../templates/server"
-        )
-      )
-      .sort();
+    const templates =
+      answers.type === "Application" ? applicationTemplates : serverTemplates;
 
     if (options.port) {
       answers.port = Number(options.port);
     } else {
       const port = (await text({
         message: "Port number?",
-        initialValue: "8080"
+        initialValue: "8080",
       })) as string;
       checkCancel(port);
       answers.port = Number(port);
@@ -94,9 +127,9 @@ function checkCancel (value: string | symbol) {
         message: "Framework?",
         options: templates.map((template) => ({
           value: template,
-          label: template
+          label: template,
         })),
-        initialValue: answers.type === "Application" ? "react-19" : "express"
+        initialValue: answers.type === "Application" ? "react-19" : "express",
       })) as string;
       checkCancel(answers.framework);
     }
@@ -109,9 +142,9 @@ function checkCancel (value: string | symbol) {
           message: "CSS?",
           options: [
             { value: "CSS", label: "CSS" },
-            { value: "Tailwind", label: "Tailwind" }
+            { value: "Tailwind", label: "Tailwind" },
           ],
-          initialValue: "Tailwind"
+          initialValue: "Tailwind",
         })) as "CSS" | "Tailwind";
         checkCancel(answers.css);
       }
@@ -121,7 +154,7 @@ function checkCancel (value: string | symbol) {
   const s = spinner();
   s.start("Building project...");
   buildProject({
-    ...answers
+    ...answers,
   });
   s.stop("Project built.");
 
