@@ -17,25 +17,25 @@ These projects are not production complete. They are designed as lightweight pro
 Without any arguments, the CLI will prompt you for the information required to create the project.
 
 ```shell
-npx create-mf-app
+npx create-mf-app@latest
 ```
 
 You can also get help for the CLI for the options available.
 
 ```shell
-npx create-mf-app --help
+npx create-mf-app@latest --help
 ```
 
 You can create an application using CLI options:
 
 ```shell
-npx create-mf-app --name my-remote --port 8080 --css Tailwind --template react-19
+npx create-mf-app@latest --name my-remote --port 8080 --css Tailwind --template react-19
 ```
 
 Shorthand versions of each option are also available:
 
 ```shell
-npx create-mf-app -n my-remote -p 8080 -c Tailwind -t react-19
+npx create-mf-app@latest -n my-remote -p 8080 -c Tailwind -t react-19
 ```
 
 ## Programmatic Usage

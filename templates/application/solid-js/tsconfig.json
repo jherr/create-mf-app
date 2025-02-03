@@ -12,7 +12,10 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "useDefineForClassFields": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "*": ["./@mf-types/*"]
+    }
   },
   "include": ["src"],
   "ts-node": {
