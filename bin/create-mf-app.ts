@@ -11,7 +11,7 @@ import {
 import fs from "node:fs";
 import path from "node:path";
 
-import { buildProject, Project } from "../src";
+import { buildProject, Project, } from "../src";
 
 function checkCancel (value: string | symbol) {
   if (isCancel(value)) {
@@ -90,7 +90,7 @@ function checkCancel (value: string | symbol) {
   const s = spinner();
   s.start("Building project...");
   buildProject({
-    ...answers,
+    ...answers
   });
   s.stop("Project built.");
 

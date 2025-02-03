@@ -1,7 +1,7 @@
 import util from "util";
 import fs from "node:fs";
 import path from "node:path";
-import { glob } from "glob";
+import { glob, } from "glob";
 
 export type Project = {
   framework?: string;
@@ -49,7 +49,7 @@ const buildProfiler = ({
   framework,
   name,
   css,
-  port,
+  port
 }: Project) => {
   const profiler: Profiler = {
     NAME: name,
@@ -76,47 +76,40 @@ export const buildProject = async (project: Project) => {
   const tempDir = type.toLowerCase();
   const profiler = buildProfiler(project);
 
-  let packageJSON: Record<string, any> = {
-    devDependencies: {}
-  };
+  if (type === "Application") {
+    await ncp(
+      path.join(__dirname, `../templates/${tempDir}/${framework}`),
+      name
+    );
 
-  switch (type) {
-    case "Library":
-      await ncp(
-        path.join(__dirname, `../templates/${tempDir}/typescript`),
-        project.name
-      );
-      break;
+    const pkg = fs.readFileSync(
+      path.join(name, "package.json"),
+      "utf8"
+    );
+    const packageJSON = JSON.parse(pkg);
+    packageJSON.devDependencies = packageJSON.devDependencies || {};
 
-    case "API Server":
-      await ncp(path.join(__dirname, `../templates/server/${framework}`), name);
-      break;
-    case "Application":
+    if (project.css === "Tailwind") {
       await ncp(
-        path.join(__dirname, `../templates/${tempDir}/${framework}`),
+        path.join(__dirname, "../templates/application-extras/tailwind"),
         name
       );
+      packageJSON.devDependencies.tailwindcss = "^3.4.1";
+    }
 
-      if (project.css === "Tailwind") {
-        await ncp(
-          path.join(__dirname, "../templates/application-extras/tailwind"),
-          name
-        );
-        packageJSON.devDependencies.tailwindcss = "^3.4.1";
-      }
-
-      const pkg = fs.readFileSync(
-        path.join(name, "package.json"),
-        "utf8"
-      );
-      packageJSON = JSON.parse(pkg);
-
-      fs.writeFileSync(
-        path.join(name, "package.json"),
-        JSON.stringify(packageJSON, null, 2)
-      );
-
-      break;
+    fs.writeFileSync(
+      path.join(name, "package.json"),
+      JSON.stringify(packageJSON, null, 2)
+    );
+  }
+  if (type === "Library") {
+    await ncp(
+      path.join(__dirname, `../templates/${tempDir}/typescript`),
+      name
+    );
+  }
+  if (type === "API Server") {
+    await ncp(path.join(__dirname, `../templates/server/${framework}`), name);
   }
 
   renameGitignore(name);
