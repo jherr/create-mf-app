@@ -8,7 +8,7 @@ export type Project = {
   css?: "CSS" | "Tailwind";
   port?: number;
   name: string;
-  type: "Application" | "Library" | "API Server";
+  type: "Application" | "Library" | "API";
 };
 
 type Profiler = {
@@ -57,7 +57,7 @@ const buildProfiler = ({
     SAFE_NAME: name.replace(/-/g, "_").trim()
   };
 
-  if (type === "API Server" || type === "Application") {
+  if (type === "API" || type === "Application") {
     profiler.PORT = port;
   }
 
@@ -108,7 +108,7 @@ export const buildProject = async (project: Project) => {
       name
     );
   }
-  if (type === "API Server") {
+  if (type === "API") {
     await ncp(path.join(__dirname, `../templates/server/${framework}`), name);
   }
 

@@ -16,7 +16,7 @@ import { buildProject, Project, } from "../src";
 
 program
   .option("-n, --name <name>", "The name of the project")
-  .option("-t, --type <type>", "The type of project to create")
+  .option("-t, --type <type>", "The type of project to create (Application, API, Library)")
   .option("-f, --framework <framework>", "The framework to use")
   .option("-p, --port <number>", "The port to use")
   .option("-c, --css <css>", "The CSS framework to use (CSS or Tailwind)");
@@ -57,14 +57,14 @@ function checkCancel (value: string | symbol) {
       message: "Pick a project type.",
       options: [
         { value: "Application", label: "Application" },
-        { value: "API Server", label: "API Server" },
+        { value: "API", label: "API" },
         { value: "Library", label: "Library" }
       ]
     })) as typeof answers.type;
     checkCancel(answers.type);
   }
 
-  if (answers.type === "Application" || answers.type === "API Server") {
+  if (answers.type === "Application" || answers.type === "API") {
     const templates = fs
       .readdirSync(
         path.join(
@@ -96,7 +96,7 @@ function checkCancel (value: string | symbol) {
           value: template,
           label: template
         })),
-        initialValue: answers.type === "Application" ? "react" : "express"
+        initialValue: answers.type === "Application" ? "react-19" : "express"
       })) as string;
       checkCancel(answers.framework);
     }
