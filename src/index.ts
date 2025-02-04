@@ -21,8 +21,6 @@ type Profiler = {
 };
 
 const templateFile = (fileName: string, replacements: Profiler) => {
-  // console.log(fileName);
-  // console.log(replacements);
   const fileContent = fs.readFileSync(fileName, "utf8").toString();
 
   const template = Object.entries(replacements).reduce((acc, [key, value]) => {
@@ -142,7 +140,6 @@ export const buildProject = async (project: Project) => {
   renameGitignore(name);
 
   const files = glob.sync(`${name}/**/*`);
-  console.log(files.forEach((f) => console.log(f)));
   for (const file of files) {
     if (fs.lstatSync(file).isFile()) {
       templateFile(file, profiler);
