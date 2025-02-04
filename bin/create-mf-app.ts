@@ -45,6 +45,7 @@ program
   )
   .option("-p, --port <number>", "The port to use")
   .option("-c, --css <css>", "The CSS framework to use (CSS or Tailwind)")
+  .option("-z", "--withZephyr", "Add deploy withZephyr")
   .option("-h, --help", "Help");
 
 program.parse();
@@ -147,6 +148,20 @@ function checkCancel(value: string | symbol) {
           initialValue: "Tailwind",
         })) as "CSS" | "Tailwind";
         checkCancel(answers.css);
+      }
+
+      if (
+        answers.framework === "react-19" ||
+        answers.framework === "react-18"
+      ) {
+        answers.withZephyr = (await select({
+          message: "Add deploy withZephyr?",
+          options: [
+            { value: true, label: "Yes" },
+            { value: false, label: "No" },
+          ],
+          initialValue: true,
+        })) as boolean;
       }
     }
   }

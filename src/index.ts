@@ -1,4 +1,3 @@
-import util from "util";
 import fs from "node:fs";
 import path from "node:path";
 import { glob } from "glob";
@@ -6,6 +5,7 @@ import { glob } from "glob";
 export type Project = {
   framework?: string;
   css?: "CSS" | "Tailwind";
+  withZephyr?: boolean;
   port?: number;
   name: string;
   type: "Application" | "Library" | "API";
@@ -19,8 +19,6 @@ type Profiler = {
   CSS?: "Tailwind" | "Empty CSS";
   CONTAINER?: string;
 };
-
-const ncp = util.promisify(require("ncp").ncp);
 
 const templateFile = (fileName: string, replacements: Profiler) => {
   const fileContent = fs.readFileSync(fileName, "utf8").toString();
@@ -65,13 +63,37 @@ const buildProfiler = ({ type, framework, name, css, port }: Project) => {
   return profiler;
 };
 
+// I for the life of me, could not get ncp to copy the directory fast enough to
+// get the template replacements handled properly.
+// So I made this hand rolled function to do it
+const copyDirSync = (sourceDir: string, targetDir: string) => {
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  const files = fs.readdirSync(sourceDir);
+
+  files.forEach((file) => {
+    const sourcePath = path.join(sourceDir, file);
+    const targetPath = path.join(targetDir, file);
+
+    const stats = fs.statSync(sourcePath);
+
+    if (stats.isDirectory()) {
+      copyDirSync(sourcePath, targetPath);
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
+};
+
 export const buildProject = async (project: Project) => {
   const { name, framework, type } = project;
   const tempDir = type.toLowerCase();
   const profiler = buildProfiler(project);
 
   if (type === "Application") {
-    await ncp(
+    copyDirSync(
       path.join(__dirname, `../templates/${tempDir}/${framework}`),
       name
     );
@@ -81,7 +103,7 @@ export const buildProject = async (project: Project) => {
     packageJSON.devDependencies = packageJSON.devDependencies || {};
 
     if (project.css === "Tailwind") {
-      await ncp(
+      await copyDirSync(
         path.join(__dirname, "../templates/application-extras/tailwind"),
         name
       );
@@ -89,16 +111,30 @@ export const buildProject = async (project: Project) => {
       packageJSON.devDependencies["tailwindcss"] = "^4.0.3";
     }
 
-    fs.writeFileSync(
+    if (project.withZephyr && project.framework === "react-19" || project.framework === "react-18") {
+      copyDirSync(
+        path.join(__dirname, "../templates/application-extras/withZephyr"),
+        name
+      );
+      packageJSON.dependencies["zephyr-rspack-plugin"] = "^0.0.32";
+    }
+
+    await fs.writeFileSync(
       path.join(name, "package.json"),
       JSON.stringify(packageJSON, null, 2)
     );
   }
   if (type === "Library") {
-    await ncp(path.join(__dirname, `../templates/${tempDir}/typescript`), name);
+    await copyDirSync(
+      path.join(__dirname, `../templates/${tempDir}/typescript`),
+      name
+    );
   }
   if (type === "API") {
-    await ncp(path.join(__dirname, `../templates/server/${framework}`), name);
+    await copyDirSync(
+      path.join(__dirname, `../templates/server/${framework}`),
+      name
+    );
   }
 
   renameGitignore(name);
