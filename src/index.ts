@@ -5,7 +5,7 @@ import { glob } from "glob";
 export type Project = {
   framework?: string;
   css?: "CSS" | "Tailwind";
-  withZephyr?: boolean;
+  withZephyr?: "yes"| "no";
   port?: number;
   name: string;
   type: "Application" | "Library" | "API";
@@ -88,7 +88,7 @@ const copyDirSync = (sourceDir: string, targetDir: string) => {
 };
 
 export const buildProject = async (project: Project) => {
-  const { name, framework, type } = project;
+  const { name, framework, type, withZephyr } = project;
   const tempDir = type.toLowerCase();
   const profiler = buildProfiler(project);
 
@@ -111,7 +111,7 @@ export const buildProject = async (project: Project) => {
       packageJSON.devDependencies["tailwindcss"] = "^4.0.3";
     }
 
-    if (project.withZephyr && project.framework === "react-19" || project.framework === "react-18") {
+    if (withZephyr === "yes" && project.framework === "react-19" || project.framework === "react-18") {
       copyDirSync(
         path.join(__dirname, "../templates/application-extras/withZephyr"),
         name
