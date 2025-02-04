@@ -9,5 +9,5 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*", "bin/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/__tests__/**/*"]
 }
