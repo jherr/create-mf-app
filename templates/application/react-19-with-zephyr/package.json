@@ -1,0 +1,30 @@
+{
+  "name": "{{NAME}}",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "NODE_ENV=production rspack build",
+    "build:dev": "NODE_ENV=development rspack build",
+    "build:start": "cd dist && rspack serve",
+    "start": "NODE_ENV=development rspack serve"
+  },
+  "devDependencies": {
+    "@rspack/cli": "~1.2.0",
+    "@rspack/core": "~1.2.0",
+    "@rspack/plugin-react-refresh": "~1.0.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.1.0",
+    "css-loader": "^7.1.2",
+    "postcss": "^8.2.1",
+    "postcss-loader": "^8.0.0",
+    "react-refresh": "^0.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@module-federation/enhanced": "^0.8.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zephyr-rspack-plugin": "0.0.31"
+  }
+}
