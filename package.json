@@ -15,8 +15,8 @@
   "dependencies": {
     "@clack/prompts": "^0.9.1",
     "commander": "^13.1.0",
-    "glob": "^11.0.1",
-    "ncp": "^2.0.0"
+    "copyfiles": "^2.4.1",
+    "glob": "^11.0.1"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
