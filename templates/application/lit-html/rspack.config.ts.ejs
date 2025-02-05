@@ -2,13 +2,14 @@ import * as path from "node:path";
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import { ModuleFederationPlugin } from "@module-federation/enhanced/rspack";
+<% if (WITH_ZEPHYR) { %>import { withZephyr } from "zephyr-rspack-plugin";<% } %>
 
 import { mfConfig } from "./module-federation.config";
 
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ["chrome >= 87", "edge >= 88", "firefox >= 78", "safari >= 14"];
 
-export default defineConfig({
+<% if (WITH_ZEPHYR) { %>export default withZephyr()({<% } else { %>export default defineConfig({<% } %>
   context: __dirname,
   entry: {
     main: "./src/index.ts",
@@ -18,15 +19,15 @@ export default defineConfig({
   },
 
   devServer: {
-    port: {{PORT}},
+    port: <%= PORT %>,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
   },
   output: {
     // You need to set a unique value that is not equal to other applications
-    uniqueName: "{{SAFE_NAME}}",
+    uniqueName: "<%= SAFE_NAME %>",
     // publicPath must be configured if using manifest
-    publicPath: "http://localhost:{{PORT}}/",
+    publicPath: "http://localhost:<%= PORT %>/",
   },
 
   experiments: {

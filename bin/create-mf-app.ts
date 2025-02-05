@@ -83,6 +83,7 @@ function checkCancel(value: string | symbol) {
   const answers: Project = {
     name: "",
     type: "Application",
+    withZephyr: false,
   };
 
   if (options.name) {
@@ -153,7 +154,7 @@ function checkCancel(value: string | symbol) {
         checkCancel(answers.css);
       }
       if (options.withZephyr) {
-        answers.withZephyr = options.withZephyr;
+        answers.withZephyr = options.withZephyr === "yes";
       } else {
         if (
           answers.framework === "react-19" ||
@@ -162,11 +163,11 @@ function checkCancel(value: string | symbol) {
           answers.withZephyr = (await select({
             message: "Add deploy withZephyr?",
             options: [
-              { value: "yes", label: "Yes" },
-              { value: "no", label: "No" },
+              { value: true, label: "Yes" },
+              { value: false, label: "No" },
             ],
-            initialValue: "yes",
-          })) as "yes" | "no";
+            initialValue: true,
+          })) as boolean;
         }
       }
     }

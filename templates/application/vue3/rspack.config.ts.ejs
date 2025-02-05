@@ -1,8 +1,9 @@
 import * as path from "node:path";
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
-import * as RefreshPlugin from "@rspack/plugin-react-refresh";
 import { ModuleFederationPlugin } from "@module-federation/enhanced/rspack";
+import { VueLoaderPlugin } from "vue-loader";
+<% if (WITH_ZEPHYR) { %>import { withZephyr } from "zephyr-rspack-plugin";<% } %>
 
 import { mfConfig } from "./module-federation.config";
 
@@ -11,7 +12,7 @@ const isDev = process.env.NODE_ENV === "development";
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ["chrome >= 87", "edge >= 88", "firefox >= 78", "safari >= 14"];
 
-export default defineConfig({
+<% if (WITH_ZEPHYR) { %>export default withZephyr()({<% } else { %>export default defineConfig({<% } %>
   context: __dirname,
   entry: {
     main: "./src/index.ts",
@@ -21,15 +22,16 @@ export default defineConfig({
   },
 
   devServer: {
-    port: {{PORT}},
+    port: <%= PORT %>,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
   },
+
   output: {
     // You need to set a unique value that is not equal to other applications
-    uniqueName: "{{SAFE_NAME}}",
+    uniqueName: "<%= SAFE_NAME %>",
     // publicPath must be configured if using manifest
-    publicPath: "http://localhost:{{PORT}}/",
+    publicPath: "http://localhost:<%= PORT %>/",
   },
 
   experiments: {
@@ -39,13 +41,20 @@ export default defineConfig({
   module: {
     rules: [
       {
-        test: /\.svg$/,
-        type: "asset",
+        test: /\.vue$/,
+        loader: "vue-loader",
+        options: {
+          experimentalInlineMatchResource: true,
+        },
       },
       {
         test: /\.css$/,
         use: ["postcss-loader"],
         type: "css",
+      },
+      {
+        test: /\.svg$/,
+        type: "asset",
       },
       {
         test: /\.(jsx?|tsx?)$/,
@@ -58,13 +67,6 @@ export default defineConfig({
                   syntax: "typescript",
                   tsx: true,
                 },
-                transform: {
-                  react: {
-                    runtime: "automatic",
-                    development: isDev,
-                    refresh: isDev,
-                  },
-                },
               },
               env: { targets },
             },
@@ -74,11 +76,11 @@ export default defineConfig({
     ],
   },
   plugins: [
+    new VueLoaderPlugin(),
     new rspack.HtmlRspackPlugin({
       template: "./index.html",
     }),
     new ModuleFederationPlugin(mfConfig),
-    isDev ? new RefreshPlugin() : null,
   ].filter(Boolean),
   optimization: {
     minimizer: [

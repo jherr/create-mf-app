@@ -10,10 +10,12 @@
   "devDependencies": {
     "@rspack/cli": "~1.2.0",
     "@rspack/core": "~1.2.0",
+    "@rspack/plugin-react-refresh": "~1.0.1",
     "autoprefixer": "^10.1.0",
     "css-loader": "^7.1.2",
     "postcss": "^8.2.1",
     "postcss-loader": "^8.0.0",
+    "react-refresh": "^0.14.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },

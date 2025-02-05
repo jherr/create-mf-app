@@ -1,11 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { glob } from "glob";
+import ejs from "ejs";
 
 export type Project = {
   framework?: string;
   css?: "CSS" | "Tailwind";
-  withZephyr?: "yes"| "no";
+  withZephyr: boolean;
   port?: number;
   name: string;
   type: "Application" | "Library" | "API";
@@ -17,19 +18,29 @@ type Profiler = {
   SAFE_NAME: string;
   PORT?: number;
   CSS?: "Tailwind" | "Empty CSS";
+  WITH_ZEPHYR: boolean;
   CONTAINER?: string;
 };
 
 const templateFile = (fileName: string, replacements: Profiler) => {
-  const fileContent = fs.readFileSync(fileName, "utf8").toString();
+  let fileContent = fs.readFileSync(fileName, "utf8").toString();
 
-  const template = Object.entries(replacements).reduce((acc, [key, value]) => {
-    return acc.replace(
-      new RegExp(`({{${key}}}|{{ ${key} }})`, "g"),
-      value?.toString() ?? ""
-    );
-  }, fileContent);
-  fs.writeFileSync(fileName, template);
+  let outputFileName = fileName;
+  // Allow for EJS templates if there is logic required to process the template
+  if (fileName.endsWith(".ejs")) {
+    fs.unlinkSync(fileName);
+    outputFileName = fileName.replace(".ejs", "");
+    fileContent = ejs.render(fileContent, replacements);
+  } else {
+    fileContent = Object.entries(replacements).reduce((acc, [key, value]) => {
+      return acc.replace(
+        new RegExp(`({{${key}}}|{{ ${key} }})`, "g"),
+        value?.toString() ?? ""
+      );
+    }, fileContent);
+  }
+
+  fs.writeFileSync(outputFileName, fileContent);
 };
 
 // required for npm publish
@@ -42,11 +53,19 @@ const renameGitignore = (projectName: string) => {
   }
 };
 
-const buildProfiler = ({ type, framework, name, css, port }: Project) => {
+const buildProfiler = ({
+  type,
+  framework,
+  name,
+  css,
+  port,
+  withZephyr,
+}: Project) => {
   const profiler: Profiler = {
     NAME: name,
     FRAMEWORK: framework,
     SAFE_NAME: name.replace(/-/g, "_").trim(),
+    WITH_ZEPHYR: withZephyr,
   };
 
   if (type === "API" || type === "Application") {
@@ -111,11 +130,7 @@ export const buildProject = async (project: Project) => {
       packageJSON.devDependencies["tailwindcss"] = "^4.0.3";
     }
 
-    if (withZephyr === "yes" && project.framework === "react-19" || project.framework === "react-18") {
-      copyDirSync(
-        path.join(__dirname, "../templates/application-extras/withZephyr"),
-        name
-      );
+    if (withZephyr) {
       packageJSON.dependencies["zephyr-rspack-plugin"] = "^0.0.32";
     }
 
