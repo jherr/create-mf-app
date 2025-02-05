@@ -3,7 +3,6 @@ import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import { ModuleFederationPlugin } from "@module-federation/enhanced/rspack";
 import { VueLoaderPlugin } from "vue-loader";
-<% if (WITH_ZEPHYR) { %>import { withZephyr } from "zephyr-rspack-plugin";<% } %>
 
 import { mfConfig } from "./module-federation.config";
 
@@ -12,7 +11,7 @@ const isDev = process.env.NODE_ENV === "development";
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ["chrome >= 87", "edge >= 88", "firefox >= 78", "safari >= 14"];
 
-<% if (WITH_ZEPHYR) { %>export default withZephyr()({<% } else { %>export default defineConfig({<% } %>
+export default defineConfig({
   context: __dirname,
   entry: {
     main: "./src/index.ts",
