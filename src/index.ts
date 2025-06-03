@@ -131,7 +131,7 @@ export const buildProject = async (project: Project) => {
     }
 
     if (withZephyr) {
-      packageJSON.dependencies["zephyr-rspack-plugin"] = "^0.0.32";
+      packageJSON.dependencies["zephyr-rspack-plugin"] = "^0.0.47";
     }
 
     await fs.writeFileSync(
